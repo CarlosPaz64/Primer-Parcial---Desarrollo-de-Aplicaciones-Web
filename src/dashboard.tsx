@@ -4,12 +4,13 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 import { KanbanContext } from './KanbanContext';
 import Column from './Column';
 import EditableInput from './EditableInput';
-import AddColumn from './AddColumn'; // Importa el nuevo módulo para añadir columnas
+import AddColumn from './AddColumn';
 import { v4 as uuidv4 } from 'uuid';
 
 const Kanban: React.FC = () => {
   const { state, dispatch } = useContext(KanbanContext);
   const [looseNoteContent, setLooseNoteContent] = useState('');
+  const [selectedColumn, setSelectedColumn] = useState('');
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, type } = result;
@@ -29,25 +30,47 @@ const Kanban: React.FC = () => {
     }
   };
 
-  const handleAddLooseNote = () => {
+  const handleAddNote = () => {
+    if (!selectedColumn) {
+      alert('Please select a column context before adding a note.');
+      return;
+    }
+
     const newNote = {
       id: uuidv4(),
       author: 'Author',
-      category: 'General',
+      category: selectedColumn,
       content: looseNoteContent,
     };
 
-    dispatch({ type: 'ADD_LOOSE_NOTE', note: newNote });
+    const column = state.columns.find((col) => col.title === selectedColumn);
+    if (column) {
+      dispatch({ type: 'ADD_NOTE', columnId: column.id, note: newNote });
+    }
+
     setLooseNoteContent('');
+    setSelectedColumn('');
   };
 
   const handleChangeTitle = (columnId: string, newTitle: string) => {
     dispatch({ type: 'CHANGE_COLUMN_TITLE', columnId, newTitle });
   };
 
+  const handleDeleteColumn = (columnId: string) => {
+    if (window.confirm('Are you sure you want to delete this column?')) {
+      dispatch({ type: 'DELETE_COLUMN', columnId });
+    }
+  };
+
+  const handleDeleteNote = (noteId: string, columnId: string) => {
+    if (window.confirm('Are you sure you want to delete this note?')) {
+      dispatch({ type: 'DELETE_NOTE', columnId, noteId });
+    }
+  };
+
   return (
-    <div>
-      <AddColumn /> {/* Agrega el componente para crear nuevas columnas */}
+    <div style={{ position: 'relative', padding: '10px' }}>
+      <AddColumn />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
           {(provided) => (
@@ -59,24 +82,15 @@ const Kanban: React.FC = () => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      style={{
-                        margin: '8px',
-                        minWidth: '200px',
-                        backgroundColor: '#f0f0f0',
-                        borderRadius: '5px',
-                        padding: '10px',
-                        ...provided.draggableProps.style,
-                      }}
+                      className="paper"
                     >
                       <EditableInput
                         initialValue={column.title}
                         onConfirm={(newTitle) => handleChangeTitle(column.id, newTitle)}
                         placeholder="Edit title"
                       />
-                      <Column column={column} index={index} />
-                      <button onClick={() => dispatch({ type: 'DELETE_COLUMN', columnId: column.id })}>
-                        Delete Column
-                      </button>
+                      <Column column={column} index={index} onDeleteNote={handleDeleteNote} />
+                      <button onClick={() => handleDeleteColumn(column.id)}>Delete Column</button>
                     </div>
                   )}
                 </Draggable>
@@ -86,53 +100,30 @@ const Kanban: React.FC = () => {
           )}
         </Droppable>
 
-        {/* Zona de Notas Sueltas */}
-        <div style={{ marginTop: '20px' }}>
-          <h3>Loose Notes</h3>
+        {/* Zona de Creación de Notas */}
+        <div className="add-note-container">
+          <h3>Create a Note</h3>
           <input
             type="text"
             value={looseNoteContent}
             onChange={(e) => setLooseNoteContent(e.target.value)}
-            placeholder="Add new loose note"
+            placeholder="Add new note"
           />
-          <button onClick={handleAddLooseNote}>Add Loose Note</button>
-
-          <Droppable droppableId="looseNotes" type="note">
-            {(provided) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={{ display: 'flex', flexWrap: 'wrap', padding: '10px', minHeight: '100px', background: '#f4f4f4' }}
-              >
-                {state.looseNotes.map((note, index) => (
-                  <Draggable key={note.id} draggableId={note.id} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={{
-                          userSelect: 'none',
-                          padding: '8px',
-                          margin: '4px',
-                          backgroundColor: '#fff',
-                          border: '1px solid #ccc',
-                          borderRadius: '3px',
-                          ...provided.draggableProps.style,
-                        }}
-                      >
-                        {note.content}
-                        <button onClick={() => dispatch({ type: 'DELETE_NOTE', columnId: 'looseNotes', noteId: note.id })}>
-                          Delete Note
-                        </button>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+          <select
+            value={selectedColumn}
+            onChange={(e) => setSelectedColumn(e.target.value)}
+            style={{ marginLeft: '10px' }}
+          >
+            <option value="">Select a column context</option>
+            {state.columns.map((column) => (
+              <option key={column.id} value={column.title}>
+                {column.title}
+              </option>
+            ))}
+          </select>
+          <button onClick={handleAddNote} style={{ marginLeft: '10px' }}>
+            Add note
+          </button>
         </div>
       </DragDropContext>
     </div>

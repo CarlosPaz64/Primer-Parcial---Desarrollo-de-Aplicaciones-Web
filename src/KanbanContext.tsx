@@ -24,10 +24,10 @@ interface KanbanState {
 
 const initialState: KanbanState = {
   columns: [
-    { id: 'column1', title: 'To Do', notes: [{ id: 'note1', author: 'Author 1', category: 'General', content: 'First Task' }] },
-    { id: 'column2', title: 'Doing', notes: [] },
-    { id: 'column3', title: 'Done', notes: [] },
-    { id: 'column4', title: 'Backlog', notes: [] },
+    { id: 'column1', title: 'Music', notes: [{ id: 'note1', author: 'Author 1', category: 'General', content: 'Alternative' }] },
+    { id: 'column2', title: 'Animals', notes: [] },
+    { id: 'column3', title: 'Product list', notes: [] },
+    { id: 'column4', title: 'Some stuff', notes: [] },
   ],
   looseNotes: [],
 };
@@ -48,33 +48,68 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
     case 'MOVE_NOTE': {
       const { sourceId, destId, sourceIndex, destIndex } = action;
 
-      // Mover nota desde una columna a otra o hacia Loose Notes
-      if (sourceId !== 'looseNotes') {
-        const sourceColumn = state.columns.find(col => col.id === sourceId);
-        if (!sourceColumn) return state;
+      // Mover nota dentro de la misma columna
+      if (sourceId === destId) {
+        const column = state.columns.find(col => col.id === sourceId);
+        if (!column) return state;
 
-        const sourceNotes = [...sourceColumn.notes];
-        const [movedNote] = sourceNotes.splice(sourceIndex, 1);
+        const updatedNotes = Array.from(column.notes);
+        const [movedNote] = updatedNotes.splice(sourceIndex, 1); // Elimina la nota del índice fuente
+        updatedNotes.splice(destIndex, 0, movedNote); // Inserta la nota en el índice destino
 
-        // Si la nota se mueve a Loose Notes
+        const updatedColumns = state.columns.map(col =>
+          col.id === sourceId ? { ...col, notes: updatedNotes } : col
+        );
+
+        return { ...state, columns: updatedColumns };
+      }
+
+      // Mover nota entre columnas o hacia/fuera de Loose Notes
+      const sourceColumn = state.columns.find(col => col.id === sourceId);
+      const destColumn = state.columns.find(col => col.id === destId);
+
+      if (!sourceColumn && sourceId === 'looseNotes') {
+        const looseNotes = Array.from(state.looseNotes);
+        const [movedNote] = looseNotes.splice(sourceIndex, 1);
+
         if (destId === 'looseNotes') {
-          const looseNotes = [...state.looseNotes];
           looseNotes.splice(destIndex, 0, movedNote);
+          return { ...state, looseNotes };
+        }
+
+        if (destColumn) {
+          const destNotes = Array.from(destColumn.notes);
+          destNotes.splice(destIndex, 0, movedNote);
 
           return {
             ...state,
-            columns: state.columns.map(col =>
-              col.id === sourceId ? { ...col, notes: sourceNotes } : col
-            ),
             looseNotes,
+            columns: state.columns.map(col =>
+              col.id === destId ? { ...destColumn, notes: destNotes } : col
+            ),
           };
         }
+      }
 
-        // Mover nota a otra columna
-        const destColumn = state.columns.find(col => col.id === destId);
-        if (!destColumn) return state;
+      if (sourceColumn && destId === 'looseNotes') {
+        const sourceNotes = Array.from(sourceColumn.notes);
+        const [movedNote] = sourceNotes.splice(sourceIndex, 1);
+        const looseNotes = Array.from(state.looseNotes);
+        looseNotes.splice(destIndex, 0, movedNote);
 
-        const destNotes = [...destColumn.notes];
+        return {
+          ...state,
+          looseNotes,
+          columns: state.columns.map(col =>
+            col.id === sourceId ? { ...sourceColumn, notes: sourceNotes } : col
+          ),
+        };
+      }
+
+      if (sourceColumn && destColumn) {
+        const sourceNotes = Array.from(sourceColumn.notes);
+        const [movedNote] = sourceNotes.splice(sourceIndex, 1);
+        const destNotes = Array.from(destColumn.notes);
         destNotes.splice(destIndex, 0, movedNote);
 
         return {
@@ -86,31 +121,6 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
               ? { ...destColumn, notes: destNotes }
               : col
           ),
-        };
-      }
-
-      // Mover nota desde Loose Notes a una columna o dentro de Loose Notes
-      if (sourceId === 'looseNotes') {
-        const looseNotes = [...state.looseNotes];
-        const [movedNote] = looseNotes.splice(sourceIndex, 1);
-
-        // Si se mueve dentro de Loose Notes
-        if (destId === 'looseNotes') {
-          looseNotes.splice(destIndex, 0, movedNote);
-          return { ...state, looseNotes };
-        }
-
-        // Mover nota desde Loose Notes a una columna
-        const destColumn = state.columns.find(col => col.id === destId);
-        if (!destColumn) return state;
-
-        const destNotes = [...destColumn.notes];
-        destNotes.splice(destIndex, 0, movedNote);
-
-        return {
-          ...state,
-          looseNotes,
-          columns: state.columns.map(col => (col.id === destId ? { ...col, notes: destNotes } : col)),
         };
       }
 
@@ -135,9 +145,6 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
 
     case 'ADD_NOTE': {
       const { columnId, note } = action;
-      if (columnId === 'looseNotes') {
-        return { ...state, looseNotes: [...state.looseNotes, note] };
-      }
       const updatedColumns = state.columns.map(col =>
         col.id === columnId ? { ...col, notes: [...col.notes, note] } : col
       );
@@ -159,11 +166,20 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
 
     case 'DELETE_NOTE': {
       const { columnId, noteId } = action;
+
+      // Maneja la eliminación de notas de looseNotes
+      if (columnId === 'looseNotes') {
+        const updatedLooseNotes = state.looseNotes.filter(note => note.id !== noteId);
+        return { ...state, looseNotes: updatedLooseNotes };
+      }
+
+      // Maneja la eliminación de notas de columnas
       const updatedColumns = state.columns.map(col =>
         col.id === columnId
           ? { ...col, notes: col.notes.filter(note => note.id !== noteId) }
           : col
       );
+
       return { ...state, columns: updatedColumns };
     }
 

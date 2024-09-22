@@ -18,9 +18,10 @@ interface ColumnProps {
     notes: Note[];
   };
   index: number;
+  onDeleteNote: (noteId: string, columnId: string) => void; // Nueva prop para manejar la eliminación
 }
 
-const Column: React.FC<ColumnProps> = ({ column }) => {
+const Column: React.FC<ColumnProps> = ({ column, onDeleteNote }) => {
   const { dispatch } = useContext(KanbanContext);
 
   const handleEditNote = (noteId: string, newContent: string) => {
@@ -35,10 +36,6 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
       noteId,
       updatedNote,
     });
-  };
-
-  const handleDeleteNote = (noteId: string) => {
-    dispatch({ type: 'DELETE_NOTE', columnId: column.id, noteId });
   };
 
   return (
@@ -83,7 +80,7 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
                       placeholder="Edit note content"
                     />
                     <button
-                      onClick={() => handleDeleteNote(note.id)}
+                      onClick={() => onDeleteNote(note.id, column.id)} // Usamos la función pasada como prop
                       style={{
                         alignSelf: 'flex-end',
                         background: '#e74c3c',
