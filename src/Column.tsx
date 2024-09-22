@@ -1,7 +1,8 @@
 // Column.tsx
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { KanbanContext } from './KanbanContext';
+import EditableNoteInput from './EditableNoteInput'; // Asegúrate de que la ruta sea correcta
 
 interface Note {
   id: string;
@@ -22,24 +23,18 @@ interface ColumnProps {
 const Column: React.FC<ColumnProps> = ({ column }) => {
   const { dispatch } = useContext(KanbanContext);
 
-  // Estado para manejar el contenido específico de cada nota
-  const [editNoteContent, setEditNoteContent] = useState<Record<string, string>>({});
-
-  // Función para manejar el cambio de contenido de cada nota
-  const handleChangeNoteContent = (noteId: string, content: string) => {
-    setEditNoteContent((prev) => ({
-      ...prev,
-      [noteId]: content, // Actualiza solo el contenido de la nota específica
-    }));
-  };
-
-  const handleEditNote = (noteId: string) => {
+  const handleEditNote = (noteId: string, newContent: string) => {
     const note = column.notes.find((note) => note.id === noteId);
     if (!note) return;
 
-    const updatedNote = { ...note, content: editNoteContent[noteId] || note.content };
+    const updatedNote = { ...note, content: newContent };
 
-    dispatch({ type: 'EDIT_NOTE', columnId: column.id, noteId, updatedNote });
+    dispatch({
+      type: 'EDIT_NOTE',
+      columnId: column.id,
+      noteId,
+      updatedNote,
+    });
   };
 
   const handleDeleteNote = (noteId: string) => {
@@ -54,7 +49,13 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            style={{ minHeight: '50px', padding: '10px', background: '#e0e0e0' }}
+            style={{
+              minHeight: '50px',
+              padding: '10px',
+              background: '#e0e0e0',
+              borderRadius: '5px',
+              boxSizing: 'border-box',
+            }}
           >
             {column.notes.map((note, index) => (
               <Draggable key={note.id} draggableId={note.id} index={index}>
@@ -70,17 +71,31 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
                       backgroundColor: '#fff',
                       border: '1px solid #ccc',
                       borderRadius: '3px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '5px',
                       ...provided.draggableProps.style,
                     }}
                   >
-                    <input
-                      type="text"
-                      value={editNoteContent[note.id] ?? note.content} // Accede al estado específico del input o al valor inicial
-                      onChange={(e) => handleChangeNoteContent(note.id, e.target.value)}
-                      onBlur={() => handleEditNote(note.id)} // Guarda los cambios al perder el foco
+                    <EditableNoteInput
+                      initialValue={note.content}
+                      onConfirm={(newContent) => handleEditNote(note.id, newContent)}
                       placeholder="Edit note content"
                     />
-                    <button onClick={() => handleDeleteNote(note.id)}>Delete</button>
+                    <button
+                      onClick={() => handleDeleteNote(note.id)}
+                      style={{
+                        alignSelf: 'flex-end',
+                        background: '#e74c3c',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '3px',
+                        padding: '5px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 )}
               </Draggable>
