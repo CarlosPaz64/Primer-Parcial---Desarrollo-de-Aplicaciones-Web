@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import Herramientas from '../CustomEditor';
 
 const ModalOverlay = styled(motion.div)`
   position: fixed;
@@ -83,7 +82,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
           >
             <h3>Create a Note</h3>
             <CKEditor
-              editor={Herramientas}
+              editor={ClassicEditor}
               data={noteContent}
               onChange={(_, editor) => {
                 const data = editor.getData(); // Solo usamos el editor, no el evento
