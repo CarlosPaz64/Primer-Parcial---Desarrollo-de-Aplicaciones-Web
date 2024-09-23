@@ -1,5 +1,5 @@
 // App.tsx
-import { KanbanProvider } from './KanbanContext'; // Importa el proveedor
+import { KanbanProvider } from './context-reducer/KanbanContext'; // Importa el proveedor
 import Kanban from './dashboard'; // Asegúrate de que la ruta sea correcta
 
 function App() {

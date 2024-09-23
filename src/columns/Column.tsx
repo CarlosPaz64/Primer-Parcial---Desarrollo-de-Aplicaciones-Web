@@ -1,15 +1,7 @@
 // Column.tsx
-import React, { useContext } from 'react';
+import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-import { KanbanContext } from './KanbanContext';
-import EditableNoteInput from './EditableNoteInput'; // Asegúrate de que la ruta sea correcta
-
-interface Note {
-  id: string;
-  author: string;
-  category: string;
-  content: string;
-}
+import { Note } from '../context-reducer/KanbanContext'; // Asegúrate de importar Note
 
 interface ColumnProps {
   column: {
@@ -18,26 +10,11 @@ interface ColumnProps {
     notes: Note[];
   };
   index: number;
-  onDeleteNote: (noteId: string, columnId: string) => void; // Nueva prop para manejar la eliminación
+  onDeleteNote: (noteId: string, columnId: string) => void;
+  onEditNote: (note: Note) => void; // Prop para manejar la edición de la nota
 }
 
-const Column: React.FC<ColumnProps> = ({ column, onDeleteNote }) => {
-  const { dispatch } = useContext(KanbanContext);
-
-  const handleEditNote = (noteId: string, newContent: string) => {
-    const note = column.notes.find((note) => note.id === noteId);
-    if (!note) return;
-
-    const updatedNote = { ...note, content: newContent };
-
-    dispatch({
-      type: 'EDIT_NOTE',
-      columnId: column.id,
-      noteId,
-      updatedNote,
-    });
-  };
-
+const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => {
   return (
     <div>
       <h3 style={{ textAlign: 'center' }}>{column.title}</h3>
@@ -54,8 +31,8 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote }) => {
               boxSizing: 'border-box',
             }}
           >
-            {column.notes.map((note, index) => (
-              <Draggable key={note.id} draggableId={note.id} index={index}>
+            {column.notes.map((note, noteIndex) => (
+              <Draggable key={note.id} draggableId={note.id} index={noteIndex}>
                 {(provided) => (
                   <div
                     ref={provided.innerRef}
@@ -74,13 +51,26 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote }) => {
                       ...provided.draggableProps.style,
                     }}
                   >
-                    <EditableNoteInput
-                      initialValue={note.content}
-                      onConfirm={(newContent) => handleEditNote(note.id, newContent)}
-                      placeholder="Edit note content"
+                    <div
+                      dangerouslySetInnerHTML={{ __html: note.content }}
+                      style={{ marginBottom: '10px' }}
                     />
                     <button
-                      onClick={() => onDeleteNote(note.id, column.id)} // Usamos la función pasada como prop
+                      onClick={() => onEditNote(note)}
+                      style={{
+                        backgroundColor: '#2196f3',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '3px',
+                        padding: '5px',
+                        cursor: 'pointer',
+                        marginBottom: '5px',
+                      }}
+                    >
+                      Edit Note
+                    </button>
+                    <button
+                      onClick={() => onDeleteNote(note.id, column.id)}
                       style={{
                         alignSelf: 'flex-end',
                         background: '#e74c3c',

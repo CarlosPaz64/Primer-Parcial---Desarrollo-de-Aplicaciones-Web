@@ -1,15 +1,23 @@
 // AddColumn.tsx
 import React, { useState, useContext } from 'react';
-import { KanbanContext } from './KanbanContext'; // Asegúrate de que la ruta sea correcta
+import { KanbanContext } from '../context-reducer/KanbanContext'; // Asegúrate de que la ruta sea correcta
 import { v4 as uuidv4 } from 'uuid';
 
 const AddColumn: React.FC = () => {
-  const { dispatch } = useContext(KanbanContext);
+  const { state, dispatch } = useContext(KanbanContext);
   const [newColumnTitle, setNewColumnTitle] = useState('');
 
   const handleAddColumn = () => {
-    if (!newColumnTitle.trim()) return; // Evita agregar columnas sin título
+    // Verificar si ya existen 4 columnas
+    if (state.columns.length >= 4) {
+      alert('You can only create 4 columns. Please, delete one or edit.');
+      return;
+    }
 
+    // Verificar si el título de la columna no está vacío
+    if (!newColumnTitle.trim()) return;
+
+    // Crear una nueva columna
     const newColumn = {
       id: uuidv4(),
       title: newColumnTitle.trim(),

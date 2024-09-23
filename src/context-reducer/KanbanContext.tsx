@@ -1,16 +1,15 @@
-// KanbanContext.tsx
 import React, { createContext, useReducer, ReactNode, Dispatch } from 'react';
 
-// Define el tipo de una nota
-interface Note {
+// Exporta la definición del tipo de una nota
+export interface Note {
   id: string;
   author: string;
   category: string;
   content: string;
 }
 
-// Define el tipo de una columna
-interface Column {
+// Exporta la definición del tipo de una columna
+export interface Column {
   id: string;
   title: string;
   notes: Note[];
@@ -24,7 +23,11 @@ interface KanbanState {
 
 const initialState: KanbanState = {
   columns: [
-    { id: 'column1', title: 'Music', notes: [{ id: 'note1', author: 'Author 1', category: 'General', content: 'Alternative' }] },
+    {
+      id: 'column1',
+      title: 'Music',
+      notes: [{ id: 'note1', author: 'Author 1', category: 'General', content: 'Alternative' }],
+    },
     { id: 'column2', title: 'Animals', notes: [] },
     { id: 'column3', title: 'Product list', notes: [] },
     { id: 'column4', title: 'Some stuff', notes: [] },

@@ -1,16 +1,20 @@
 // Kanban.tsx
 import React, { useContext, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { KanbanContext } from './KanbanContext';
-import Column from './Column';
-import EditableInput from './EditableInput';
-import AddColumn from './AddColumn';
+import { KanbanContext, Note } from './context-reducer/KanbanContext'; // Importa Note desde KanbanContext
+import Column from './columns/Column';
+import EditableInput from './inputs/EditableInput';
+import AddColumn from './columns/AddColumn';
+import CreateNoteModal from './modal/CreateNoteModal';
+import EditNoteModal from './modal/EditNoteModal';
 import { v4 as uuidv4 } from 'uuid';
 
 const Kanban: React.FC = () => {
   const { state, dispatch } = useContext(KanbanContext);
-  const [looseNoteContent, setLooseNoteContent] = useState('');
-  const [selectedColumn, setSelectedColumn] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentNoteContent, setCurrentNoteContent] = useState('');
+  const [currentNote, setCurrentNote] = useState<Note | null>(null);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, type } = result;
@@ -30,27 +34,48 @@ const Kanban: React.FC = () => {
     }
   };
 
-  const handleAddNote = () => {
-    if (!selectedColumn) {
-      alert('Please select a column context before adding a note.');
-      return;
-    }
-
-    const newNote = {
+  const handleAddNote = (content: string, columnId: string) => {
+    const newNote: Note = {
       id: uuidv4(),
       author: 'Author',
-      category: selectedColumn,
-      content: looseNoteContent,
+      category: columnId,
+      content: content,
     };
 
-    const column = state.columns.find((col) => col.title === selectedColumn);
-    if (column) {
-      dispatch({ type: 'ADD_NOTE', columnId: column.id, note: newNote });
-    }
-
-    setLooseNoteContent('');
-    setSelectedColumn('');
+    dispatch({ type: 'ADD_NOTE', columnId, note: newNote });
   };
+
+  const handleEditNote = (note: Note) => {
+    setCurrentNoteContent(note.content);
+    setCurrentNote(note);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveNote = (newContent: string) => {
+    if (currentNote) {
+      const updatedNote: Note = {
+        ...currentNote,
+        content: newContent,
+      };
+  
+      // Busca la columna que contiene la nota actual
+      const column = state.columns.find((col) =>
+        col.notes.some((note) => note.id === currentNote.id)
+      );
+  
+      if (column) {
+        dispatch({
+          type: 'EDIT_NOTE',
+          columnId: column.id, // Usa el ID correcto de la columna
+          noteId: currentNote.id,
+          updatedNote,
+        });
+      }
+  
+      setIsEditModalOpen(false);
+    }
+  };
+  
 
   const handleChangeTitle = (columnId: string, newTitle: string) => {
     dispatch({ type: 'CHANGE_COLUMN_TITLE', columnId, newTitle });
@@ -89,7 +114,12 @@ const Kanban: React.FC = () => {
                         onConfirm={(newTitle) => handleChangeTitle(column.id, newTitle)}
                         placeholder="Edit title"
                       />
-                      <Column column={column} index={index} onDeleteNote={handleDeleteNote} />
+                      <Column
+                        column={column}
+                        index={index}
+                        onDeleteNote={handleDeleteNote}
+                        onEditNote={handleEditNote}
+                      />
                       <button onClick={() => handleDeleteColumn(column.id)}>Delete Column</button>
                     </div>
                   )}
@@ -99,33 +129,40 @@ const Kanban: React.FC = () => {
             </div>
           )}
         </Droppable>
-
-        {/* Zona de Creación de Notas */}
-        <div className="add-note-container">
-          <h3>Create a Note</h3>
-          <input
-            type="text"
-            value={looseNoteContent}
-            onChange={(e) => setLooseNoteContent(e.target.value)}
-            placeholder="Add new note"
-          />
-          <select
-            value={selectedColumn}
-            onChange={(e) => setSelectedColumn(e.target.value)}
-            style={{ marginLeft: '10px' }}
-          >
-            <option value="">Select a column context</option>
-            {state.columns.map((column) => (
-              <option key={column.id} value={column.title}>
-                {column.title}
-              </option>
-            ))}
-          </select>
-          <button onClick={handleAddNote} style={{ marginLeft: '10px' }}>
-            Add note
-          </button>
-        </div>
       </DragDropContext>
+
+      <button
+        onClick={() => setIsCreateModalOpen(true)}
+        style={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          backgroundColor: '#4caf50',
+          color: 'white',
+          padding: '10px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        Create Note
+      </button>
+
+      <CreateNoteModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onAddNote={handleAddNote}
+        columns={state.columns.map((col) => ({ id: col.id, title: col.title }))}
+      />
+
+      {currentNote && (
+        <EditNoteModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSaveNote={handleSaveNote}
+          initialContent={currentNoteContent}
+        />
+      )}
     </div>
   );
 };
