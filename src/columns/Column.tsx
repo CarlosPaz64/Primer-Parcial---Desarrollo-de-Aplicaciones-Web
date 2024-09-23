@@ -1,7 +1,7 @@
 // Column.tsx
 import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-import { Note } from '../context-reducer/KanbanContext'; // Asegúrate de importar Note
+import { Note } from '../context-reducer/KanbanContext';
 
 interface ColumnProps {
   column: {
@@ -11,7 +11,7 @@ interface ColumnProps {
   };
   index: number;
   onDeleteNote: (noteId: string, columnId: string) => void;
-  onEditNote: (note: Note) => void; // Prop para manejar la edición de la nota
+  onEditNote: (note: Note) => void;
 }
 
 const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => {
@@ -55,34 +55,34 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
                       dangerouslySetInnerHTML={{ __html: note.content }}
                       style={{ marginBottom: '10px' }}
                     />
-                    <button
-                      onClick={() => onEditNote(note)}
-                      style={{
-                        backgroundColor: '#2196f3',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '3px',
-                        padding: '5px',
-                        cursor: 'pointer',
-                        marginBottom: '5px',
-                      }}
-                    >
-                      Edit Note
-                    </button>
-                    <button
-                      onClick={() => onDeleteNote(note.id, column.id)}
-                      style={{
-                        alignSelf: 'flex-end',
-                        background: '#e74c3c',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '3px',
-                        padding: '5px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Delete
-                    </button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <button
+                        onClick={() => onEditNote(note)}
+                        style={{
+                          background: 'turquoise',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '3px',
+                          padding: '5px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Edit Note
+                      </button>
+                      <button
+                        onClick={() => onDeleteNote(note.id, column.id)}
+                        style={{
+                          background: '#e74c3c',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '3px',
+                          padding: '5px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 )}
               </Draggable>
