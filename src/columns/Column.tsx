@@ -1,7 +1,8 @@
 // Column.tsx
 import React from 'react';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable } from 'react-beautiful-dnd';
 import { Note } from '../context-reducer/KanbanContext';
+import NoteCard from '../draggable/NoteCard'; // Importa el componente NoteCard
 
 interface ColumnProps {
   column: {
@@ -32,60 +33,14 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
             }}
           >
             {column.notes.map((note, noteIndex) => (
-              <Draggable key={note.id} draggableId={note.id} index={noteIndex}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={{
-                      userSelect: 'none',
-                      padding: '8px',
-                      margin: '0 0 8px 0',
-                      backgroundColor: '#fff',
-                      border: '1px solid #ccc',
-                      borderRadius: '3px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '5px',
-                      ...provided.draggableProps.style, // Asegúrate de incluir los estilos proporcionados para el arrastre
-                    }}
-                  >
-                    <div
-                      dangerouslySetInnerHTML={{ __html: note.content }}
-                      style={{ marginBottom: '10px' }}
-                    />
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <button
-                        onClick={() => onEditNote(note)}
-                        style={{
-                          background: 'turquoise',
-                          color: '#fff',
-                          border: 'none',
-                          borderRadius: '3px',
-                          padding: '5px',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Edit Note
-                      </button>
-                      <button
-                        onClick={() => onDeleteNote(note.id, column.id)}
-                        style={{
-                          background: '#e74c3c',
-                          color: '#fff',
-                          border: 'none',
-                          borderRadius: '3px',
-                          padding: '5px',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </Draggable>
+              <NoteCard
+                key={note.id}
+                note={note}
+                index={noteIndex}
+                onEditNote={onEditNote}
+                onDeleteNote={onDeleteNote}
+                columnId={column.id} // Pasa el ID de la columna al NoteCard
+              />
             ))}
             {provided.placeholder}
           </div>
