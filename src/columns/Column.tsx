@@ -48,7 +48,7 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '5px',
-                      ...provided.draggableProps.style,
+                      ...provided.draggableProps.style, // Asegúrate de incluir los estilos proporcionados para el arrastre
                     }}
                   >
                     <div

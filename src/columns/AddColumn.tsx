@@ -8,9 +8,9 @@ const AddColumn: React.FC = () => {
   const [newColumnTitle, setNewColumnTitle] = useState('');
 
   const handleAddColumn = () => {
-    // Verificar si ya existen 4 columnas
-    if (state.columns.length >= 4) {
-      alert('You can only create 4 columns. Please, delete one or edit.');
+    // Verificar si ya existen 5 columnas
+    if (state.columns.length >= 5) {
+      alert('You can only create 5 columns. Please, delete one or edit.');
       return;
     }
 

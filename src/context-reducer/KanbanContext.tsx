@@ -18,7 +18,7 @@ export interface Column {
 // Define el estado inicial y las acciones para el reducer
 interface KanbanState {
   columns: Column[];
-  looseNotes: Note[];
+  looseNotes: Note[]; // Añadido looseNotes para notas no asignadas
 }
 
 const initialState: KanbanState = {
@@ -32,7 +32,7 @@ const initialState: KanbanState = {
     { id: 'column3', title: 'Product list', notes: [] },
     { id: 'column4', title: 'Some stuff', notes: [] },
   ],
-  looseNotes: [],
+  looseNotes: [], // Estado inicial vacío para notas no asignadas
 };
 
 type Action =
@@ -51,34 +51,34 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
     case 'MOVE_NOTE': {
       const { sourceId, destId, sourceIndex, destIndex } = action;
 
-      // Mover nota dentro de la misma columna
       if (sourceId === destId) {
-        const column = state.columns.find(col => col.id === sourceId);
-        if (!column) return state;
+        // Mover nota dentro de la misma columna o dentro de looseNotes
+        const column = sourceId === 'looseNotes' ? null : state.columns.find(col => col.id === sourceId);
+        if (column) {
+          const updatedNotes = Array.from(column.notes);
+          const [movedNote] = updatedNotes.splice(sourceIndex, 1);
+          updatedNotes.splice(destIndex, 0, movedNote);
 
-        const updatedNotes = Array.from(column.notes);
-        const [movedNote] = updatedNotes.splice(sourceIndex, 1); // Elimina la nota del índice fuente
-        updatedNotes.splice(destIndex, 0, movedNote); // Inserta la nota en el índice destino
+          const updatedColumns = state.columns.map(col =>
+            col.id === sourceId ? { ...col, notes: updatedNotes } : col
+          );
 
-        const updatedColumns = state.columns.map(col =>
-          col.id === sourceId ? { ...col, notes: updatedNotes } : col
-        );
-
-        return { ...state, columns: updatedColumns };
+          return { ...state, columns: updatedColumns };
+        } else {
+          const looseNotes = Array.from(state.looseNotes);
+          const [movedNote] = looseNotes.splice(sourceIndex, 1);
+          looseNotes.splice(destIndex, 0, movedNote);
+          return { ...state, looseNotes };
+        }
       }
 
-      // Mover nota entre columnas o hacia/fuera de Loose Notes
-      const sourceColumn = state.columns.find(col => col.id === sourceId);
-      const destColumn = state.columns.find(col => col.id === destId);
+      // Mover nota entre columnas o entre una columna y looseNotes
+      const sourceColumn = sourceId === 'looseNotes' ? null : state.columns.find(col => col.id === sourceId);
+      const destColumn = destId === 'looseNotes' ? null : state.columns.find(col => col.id === destId);
 
       if (!sourceColumn && sourceId === 'looseNotes') {
         const looseNotes = Array.from(state.looseNotes);
         const [movedNote] = looseNotes.splice(sourceIndex, 1);
-
-        if (destId === 'looseNotes') {
-          looseNotes.splice(destIndex, 0, movedNote);
-          return { ...state, looseNotes };
-        }
 
         if (destColumn) {
           const destNotes = Array.from(destColumn.notes);
@@ -92,6 +92,9 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
             ),
           };
         }
+
+        looseNotes.splice(destIndex, 0, movedNote);
+        return { ...state, looseNotes };
       }
 
       if (sourceColumn && destId === 'looseNotes') {
@@ -127,9 +130,10 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
         };
       }
 
-      return state; // Devuelve el estado actual si no se cumple ninguna condición
+      return state;
     }
 
+    // Los demás casos siguen igual
     case 'MOVE_COLUMN': {
       const { sourceIndex, destIndex } = action;
       const newColumns = Array.from(state.columns);
@@ -156,6 +160,16 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
 
     case 'EDIT_NOTE': {
       const { columnId, noteId, updatedNote } = action;
+
+      if (columnId === 'looseNotes') {
+        // Maneja la edición de notas dentro de la zona muerta (looseNotes)
+        const updatedLooseNotes = state.looseNotes.map(note =>
+          note.id === noteId ? updatedNote : note
+        );
+        return { ...state, looseNotes: updatedLooseNotes };
+      }
+
+      // Maneja la edición de notas dentro de las columnas
       const updatedColumns = state.columns.map(col =>
         col.id === columnId
           ? {
@@ -164,19 +178,18 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
             }
           : col
       );
+
       return { ...state, columns: updatedColumns };
     }
 
     case 'DELETE_NOTE': {
       const { columnId, noteId } = action;
 
-      // Maneja la eliminación de notas de looseNotes
       if (columnId === 'looseNotes') {
         const updatedLooseNotes = state.looseNotes.filter(note => note.id !== noteId);
         return { ...state, looseNotes: updatedLooseNotes };
       }
 
-      // Maneja la eliminación de notas de columnas
       const updatedColumns = state.columns.map(col =>
         col.id === columnId
           ? { ...col, notes: col.notes.filter(note => note.id !== noteId) }

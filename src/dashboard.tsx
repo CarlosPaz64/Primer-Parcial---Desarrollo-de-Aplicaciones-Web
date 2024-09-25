@@ -1,12 +1,13 @@
 // Kanban.tsx
 import React, { useContext, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { KanbanContext, Note } from './context-reducer/KanbanContext'; // Importa Note desde KanbanContext
+import { KanbanContext, Note } from './context-reducer/KanbanContext';
 import Column from './columns/Column';
 import EditableInput from './inputs/EditableInput';
 import AddColumn from './columns/AddColumn';
 import CreateNoteModal from './modal/CreateNoteModal';
 import EditNoteModal from './modal/EditNoteModal';
+import NoteCard from './draggable/NoteCard'; // Importa el nuevo componente NoteCard
 import { v4 as uuidv4 } from 'uuid';
 
 const Kanban: React.FC = () => {
@@ -22,15 +23,22 @@ const Kanban: React.FC = () => {
     if (!destination) return;
 
     if (type === 'column') {
+      // Maneja el movimiento de columnas
       dispatch({ type: 'MOVE_COLUMN', sourceIndex: source.index, destIndex: destination.index });
     } else {
-      dispatch({
-        type: 'MOVE_NOTE',
-        sourceId: source.droppableId,
-        destId: destination.droppableId,
-        sourceIndex: source.index,
-        destIndex: destination.index,
-      });
+      // Maneja el movimiento de notas entre columnas o hacia/fuera de la zona muerta
+      const sourceId = source.droppableId === 'dead-zone' ? 'looseNotes' : source.droppableId;
+      const destId = destination.droppableId === 'dead-zone' ? 'looseNotes' : destination.droppableId;
+
+      if (sourceId && destId) {
+        dispatch({
+          type: 'MOVE_NOTE',
+          sourceId: sourceId,
+          destId: destId,
+          sourceIndex: source.index,
+          destIndex: destination.index,
+        });
+      }
     }
   };
 
@@ -57,25 +65,30 @@ const Kanban: React.FC = () => {
         ...currentNote,
         content: newContent,
       };
-  
-      // Busca la columna que contiene la nota actual
+
       const column = state.columns.find((col) =>
         col.notes.some((note) => note.id === currentNote.id)
       );
-  
+
       if (column) {
         dispatch({
           type: 'EDIT_NOTE',
-          columnId: column.id, // Usa el ID correcto de la columna
+          columnId: column.id,
+          noteId: currentNote.id,
+          updatedNote,
+        });
+      } else if (state.looseNotes.some((note) => note.id === currentNote.id)) {
+        dispatch({
+          type: 'EDIT_NOTE',
+          columnId: 'looseNotes',
           noteId: currentNote.id,
           updatedNote,
         });
       }
-  
+
       setIsEditModalOpen(false);
     }
   };
-  
 
   const handleChangeTitle = (columnId: string, newTitle: string) => {
     dispatch({ type: 'CHANGE_COLUMN_TITLE', columnId, newTitle });
@@ -124,6 +137,36 @@ const Kanban: React.FC = () => {
                     </div>
                   )}
                 </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+
+        {/* Zona muerta para notas no asignadas */}
+        <Droppable droppableId="dead-zone" type="note">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={{
+                marginTop: '20px',
+                padding: '20px',
+                border: '2px dashed #ccc',
+                minHeight: '150px',
+                backgroundColor: '#f9f9f9',
+              }}
+            >
+              <h3>Note's dead zone</h3>
+              {state.looseNotes.map((note, index) => (
+                <NoteCard
+                  key={note.id}
+                  note={note}
+                  index={index}
+                  onEditNote={handleEditNote}
+                  onDeleteNote={handleDeleteNote}
+                  columnId="looseNotes"
+                />
               ))}
               {provided.placeholder}
             </div>
