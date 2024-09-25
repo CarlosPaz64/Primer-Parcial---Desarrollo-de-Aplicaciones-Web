@@ -9,6 +9,7 @@ import CreateNoteModal from './modal/CreateNoteModal';
 import EditNoteModal from './modal/EditNoteModal';
 import NoteCard from './draggable/NoteCard'; // Importa el nuevo componente NoteCard
 import { v4 as uuidv4 } from 'uuid';
+import AppBar from './appBar/AppBar'; //Importacion del AppBar
 
 const Kanban: React.FC = () => {
   const { state, dispatch } = useContext(KanbanContext);
@@ -108,6 +109,7 @@ const Kanban: React.FC = () => {
 
   return (
     <div style={{ position: 'relative', padding: '10px' }}>
+      <AppBar />
       <AddColumn />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
@@ -178,7 +180,7 @@ const Kanban: React.FC = () => {
         onClick={() => setIsCreateModalOpen(true)}
         style={{
           position: 'absolute',
-          top: '10px',
+          top: '135px',
           right: '10px',
           backgroundColor: '#4caf50',
           color: 'white',

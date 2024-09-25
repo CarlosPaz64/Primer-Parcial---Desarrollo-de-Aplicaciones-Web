@@ -1,16 +1,20 @@
+/* styles.css */
+
 /* Estilo general del cuerpo y de los encabezados */
 body {
-  background-color: gainsboro;
+  background-color: #f0e4d7; /* Color pastel sugerido de ColorHunt */
   margin: 0;
-  font-family: 'Patrick Hand', cursive;
+  font-family: 'Noto Sans', sans-serif;
+  color: #000; /* Color del texto en general */
 }
 
 h1, h3 {
   text-align: center;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   margin-bottom: 20px;
+  color: #000; /* Color del texto */
 }
-/* styles.css */
+
 /* Estilo para mover el contenedor de "Add Note" a la esquina superior derecha sin un fondo */
 .add-note-container {
   position: absolute;
@@ -83,5 +87,5 @@ input, select {
   height: 14px;
   border-radius: 50%;
   background-color: gainsboro;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2) inset;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2) inset;
 }

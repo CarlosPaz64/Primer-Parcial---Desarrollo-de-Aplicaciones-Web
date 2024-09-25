@@ -32,8 +32,6 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, index, onEditNote, onDeleteNo
             position: 'relative',
             boxSizing: 'border-box', // Incluye padding y borde en el tamaño total del contenedor
             maxWidth: '200px', // Ajusta este valor para el ancho según lo que necesites
-            fontFamily: "'Caveat', cursive", // Fuente que simula escritura a mano
-            color: '#333',
             lineHeight: '1.4',
             ...provided.draggableProps.style,
             // Estilos de hoja de libreta
