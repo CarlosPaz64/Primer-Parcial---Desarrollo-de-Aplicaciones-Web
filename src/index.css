@@ -2,7 +2,7 @@
 
 /* Estilo general del cuerpo y de los encabezados */
 body {
-  background-color: #f0e4d7; /* Color pastel sugerido de ColorHunt */
+  background-color: #C9DABF; /* Color pastel sugerido de ColorHunt */
   margin: 0;
   font-family: 'Noto Sans', sans-serif;
   color: #000; /* Color del texto en general */
@@ -52,14 +52,16 @@ input, select {
 }
 
 .paper {
-  position: relative;
   padding: 10px 20px;
   background-color: #fff;
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
   line-height: 25px;
   border: 1px solid #d3d3d3;
   width: 350px;
+  z-index: 0; /* Asegúrate de que el z-index no interfiera con las notas */
+  overflow: visible; /* Evita que los elementos arrastrados se oculten al moverse */
 }
+
 
 /* Líneas de la hoja */
 .lines {

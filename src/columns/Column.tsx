@@ -1,8 +1,8 @@
 // Column.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { Note } from '../context-reducer/KanbanContext';
-import NoteCard from '../draggable/NoteCard'; // Importa el componente NoteCard
+import NoteCard from '../draggable/NoteCard';
 
 interface ColumnProps {
   column: {
@@ -16,9 +16,13 @@ interface ColumnProps {
 }
 
 const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  // Limita la visualización de las notas a un máximo de 5
+  const displayedNotes = expanded ? column.notes : column.notes.slice(0, 5);
+
   return (
-    <div>
-      <h3 style={{ textAlign: 'center' }}>{column.title}</h3>
+    <div style={{ position: 'relative', zIndex: 0, marginBottom: '20px', cursor: 'pointer' }}>
       <Droppable droppableId={column.id} type="note">
         {(provided) => (
           <div
@@ -26,23 +30,47 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
             ref={provided.innerRef}
             style={{
               minHeight: '50px',
-              padding: '10px',
-              background: '#e0e0e0',
-              borderRadius: '5px',
-              boxSizing: 'border-box',
+              padding: '0',
+              position: 'relative',
+              zIndex: 0,
+              overflow: 'visible',
+              background: 'transparent', // Fondo transparente
             }}
           >
-            {column.notes.map((note, noteIndex) => (
-              <NoteCard
+            {displayedNotes.map((note, noteIndex) => (
+              <div
                 key={note.id}
-                note={note}
-                index={noteIndex}
-                onEditNote={onEditNote}
-                onDeleteNote={onDeleteNote}
-                columnId={column.id} // Pasa el ID de la columna al NoteCard
-              />
+                style={{
+                  position: 'relative',
+                  top: `${noteIndex * 5}px`, // Simula superposición con pequeños desplazamientos
+                  left: `${noteIndex * 2}px`,
+                  zIndex: 5 - noteIndex,
+                }}
+                onClick={() => setExpanded(!expanded)} // Expande o colapsa la vista de las notas al hacer clic
+              >
+                <NoteCard
+                  note={note}
+                  index={noteIndex}
+                  onEditNote={onEditNote}
+                  onDeleteNote={onDeleteNote}
+                  columnId={column.id}
+                />
+              </div>
             ))}
             {provided.placeholder}
+
+            {/* Título de la columna y botón de eliminar */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: '20px',
+                padding: '0 10px',
+              }}
+            >
+              <h3 style={{ fontWeight: '500' }}>{column.title}</h3>
+            </div>
           </div>
         )}
       </Droppable>

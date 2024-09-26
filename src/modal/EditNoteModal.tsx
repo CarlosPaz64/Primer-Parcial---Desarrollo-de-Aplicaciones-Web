@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const ModalOverlay = styled(motion.div)`
   position: fixed;
@@ -15,6 +13,7 @@ const ModalOverlay = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
 `;
 
 const ModalContent = styled(motion.div)`
@@ -51,14 +50,17 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
   onSaveNote,
   initialContent,
 }) => {
-  const [noteContent, setNoteContent] = useState(initialContent);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState(initialContent);
+  const [category, setCategory] = useState('');
+  const [tags, setTags] = useState('');
 
   useEffect(() => {
-    setNoteContent(initialContent);
+    setContent(initialContent);
   }, [initialContent]);
 
   const handleSaveNote = () => {
-    onSaveNote(noteContent);
+    onSaveNote(content);
     onClose();
   };
 
@@ -70,23 +72,49 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
           animate="animate"
           exit="exit"
           variants={modalOverlayVariants}
-          onMouseDown={(e) => e.stopPropagation()} // Detener la propagación de eventos de arrastre
+          onMouseDown={(e) => e.stopPropagation()}
         >
           <ModalContent
             initial="initial"
             animate="animate"
             exit="exit"
             variants={modalContentVariants}
-            onMouseDown={(e) => e.stopPropagation()} // También en el contenido del modal
+            onMouseDown={(e) => e.stopPropagation()}
           >
-            <h3>Edit Note</h3>
-            <CKEditor
-              editor={ClassicEditor}
-              data={noteContent}
-              onChange={(_, editor) => {
-                const data = editor.getData();
-                setNoteContent(data);
+            <h3>Editar Nota</h3>
+            <input
+              type="text"
+              placeholder="Título"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
+            />
+            <textarea
+              placeholder="Contenido"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                padding: '8px',
+                borderRadius: '5px',
+                minHeight: '100px',
+                resize: 'vertical',
               }}
+            />
+            <input
+              type="text"
+              placeholder="Categoría/s (opcional)"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
+            />
+            <input
+              type="text"
+              placeholder="Etiqueta/s (opcional)"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
             />
             <button
               onClick={handleSaveNote}
@@ -97,24 +125,25 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
                 border: 'none',
                 borderRadius: '5px',
                 width: '100%',
-                marginTop: '10px',
+                marginBottom: '10px',
+                cursor: 'pointer',
               }}
             >
-              Save Note
+              Guardar Nota
             </button>
             <button
               onClick={onClose}
               style={{
-                marginTop: '10px',
                 backgroundColor: '#f44336',
                 color: 'white',
                 padding: '10px',
                 border: 'none',
                 borderRadius: '5px',
                 width: '100%',
+                cursor: 'pointer',
               }}
             >
-              Cancel
+              Cancelar
             </button>
           </ModalContent>
         </ModalOverlay>

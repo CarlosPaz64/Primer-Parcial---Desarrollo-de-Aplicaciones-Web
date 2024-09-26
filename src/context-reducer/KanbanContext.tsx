@@ -4,9 +4,12 @@ import React, { createContext, useReducer, ReactNode, Dispatch } from 'react';
 export interface Note {
   id: string;
   author: string;
-  category: string;
+  title: string; // Añadido título
+  category?: string; // Mantén categoría como opcional si es necesario
   content: string;
+  tags?: string[]; // Añadido tags como opcional
 }
+
 
 // Exporta la definición del tipo de una columna
 export interface Column {
@@ -21,12 +24,22 @@ interface KanbanState {
   looseNotes: Note[]; // Añadido looseNotes para notas no asignadas
 }
 
+// Estado inicial de columnas y looseNotes con las nuevas propiedades añadidas
 const initialState: KanbanState = {
   columns: [
     {
       id: 'column1',
       title: 'Music',
-      notes: [{ id: 'note1', author: 'Author 1', category: 'General', content: 'Alternative' }],
+      notes: [
+        {
+          id: 'note1',
+          author: 'Author 1',
+          title: 'Note Title 1', // Ejemplo de título
+          category: 'General',
+          content: 'This is a description of the note.', // Descripción del contenido
+          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+        },
+      ],
     },
     { id: 'column2', title: 'Animals', notes: [] },
     { id: 'column3', title: 'Product list', notes: [] },
@@ -34,6 +47,7 @@ const initialState: KanbanState = {
   ],
   looseNotes: [], // Estado inicial vacío para notas no asignadas
 };
+
 
 type Action =
   | { type: 'MOVE_NOTE'; sourceId: string; destId: string; sourceIndex: number; destIndex: number }

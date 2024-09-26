@@ -5,7 +5,7 @@ const AppBar: React.FC = () => {
   return (
     <header
       style={{
-        backgroundColor: '#E7CCCC', // Color pastel para el fondo
+        backgroundColor: '#5F6F65', // Color pastel para el fondo
         padding: '20px',
         borderRadius: '8px', // Bordes redondeados
         textAlign: 'center',

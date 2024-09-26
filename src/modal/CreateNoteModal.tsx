@@ -2,8 +2,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const ModalOverlay = styled(motion.div)`
   position: fixed;
@@ -15,6 +13,7 @@ const ModalOverlay = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
 `;
 
 const ModalContent = styled(motion.div)`
@@ -51,16 +50,22 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   onAddNote,
   columns,
 }) => {
-  const [noteContent, setNoteContent] = useState('');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [category, setCategory] = useState('');
+  const [tags, setTags] = useState('');
   const [selectedColumn, setSelectedColumn] = useState('');
 
   const handleAddNote = () => {
     if (!selectedColumn) {
-      alert('Please select a column context before adding a note.');
+      alert('Por favor, selecciona una columna antes de agregar una nota.');
       return;
     }
-    onAddNote(noteContent, selectedColumn);
-    setNoteContent('');
+    onAddNote(content, selectedColumn);
+    setTitle('');
+    setContent('');
+    setCategory('');
+    setTags('');
     setSelectedColumn('');
     onClose();
   };
@@ -80,21 +85,47 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
             exit="exit"
             variants={modalContentVariants}
           >
-            <h3>Create a Note</h3>
-            <CKEditor
-              editor={ClassicEditor}
-              data={noteContent}
-              onChange={(_, editor) => {
-                const data = editor.getData(); // Solo usamos el editor, no el evento
-                setNoteContent(data);
+            <h3>Crear una Nota</h3>
+            <input
+              type="text"
+              placeholder="Título"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
+            />
+            <textarea
+              placeholder="Contenido"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                padding: '8px',
+                borderRadius: '5px',
+                minHeight: '100px',
+                resize: 'vertical',
               }}
+            />
+            <input
+              type="text"
+              placeholder="Categoría/s (opcional)"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
+            />
+            <input
+              type="text"
+              placeholder="Etiqueta/s (opcional)"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
             />
             <select
               value={selectedColumn}
               onChange={(e) => setSelectedColumn(e.target.value)}
-              style={{ marginBottom: '10px', width: '100%', padding: '8px' }}
+              style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
             >
-              <option value="">Select a column context</option>
+              <option value="">Selecciona una columna</option>
               {columns.map((column) => (
                 <option key={column.id} value={column.id}>
                   {column.title}
@@ -110,23 +141,25 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 border: 'none',
                 borderRadius: '5px',
                 width: '100%',
+                marginBottom: '10px',
+                cursor: 'pointer',
               }}
             >
-              Add note
+              Guardar
             </button>
             <button
               onClick={onClose}
               style={{
-                marginTop: '10px',
                 backgroundColor: '#f44336',
                 color: 'white',
                 padding: '10px',
                 border: 'none',
                 borderRadius: '5px',
                 width: '100%',
+                cursor: 'pointer',
               }}
             >
-              Cancel
+              Cancelar
             </button>
           </ModalContent>
         </ModalOverlay>

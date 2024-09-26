@@ -1,87 +1,70 @@
 // NoteCard.tsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { Note } from '../context-reducer/KanbanContext';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+// Función para obtener un color pastel aleatorio
+const getRandomPastelColor = () => {
+  const pastelColors = ['#FFD1DC', '#D4F1F4', '#C3FDB8', '#FFFACD', '#FAD6A5'];
+  return pastelColors[Math.floor(Math.random() * pastelColors.length)];
+};
 
 interface NoteCardProps {
   note: Note;
   index: number;
   onEditNote: (note: Note) => void;
   onDeleteNote: (noteId: string, columnId: string) => void;
-  columnId: string; // Para identificar en qué columna o zona está la nota
+  columnId: string;
 }
 
 const NoteCard: React.FC<NoteCardProps> = ({ note, index, onEditNote, onDeleteNote, columnId }) => {
+  // Color de fondo aleatorio generado solo una vez por nota
+  const backgroundColor = useMemo(() => getRandomPastelColor(), []);
+
   return (
     <Draggable key={note.id} draggableId={note.id} index={index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={{
-            userSelect: 'none',
-            padding: '16px',
-            margin: '0 0 8px 0',
-            backgroundColor: '#fff',
-            border: '1px solid #ddd',
-            borderRadius: '3px',
+            ...provided.draggableProps.style,
+            padding: '20px',
+            margin: snapshot.isDragging ? '0' : '0 0 8px 0',
+            backgroundColor: backgroundColor,
+            borderRadius: '4px', // Borde rectangular
+            boxShadow: '2px 2px 6px rgba(0, 0, 0, 0.1), -2px 2px 6px rgba(0, 0, 0, 0.1)', // Sombra a la izquierda y derecha
             display: 'flex',
             flexDirection: 'column',
-            gap: '5px',
-            position: 'relative',
-            boxSizing: 'border-box', // Incluye padding y borde en el tamaño total del contenedor
-            maxWidth: '200px', // Ajusta este valor para el ancho según lo que necesites
-            lineHeight: '1.4',
-            ...provided.draggableProps.style,
-            // Estilos de hoja de libreta
-            wordWrap: 'break-word', // Asegura que el texto no se salga del contenedor
-            backgroundImage: 'linear-gradient(180deg, transparent 23px, #d3d3d3 24px)',
-            backgroundSize: '100% 25px', // Espacio entre líneas
+            gap: '8px',
+            zIndex: snapshot.isDragging ? 1000 : 1, // Controla la superposición
+            position: snapshot.isDragging ? 'fixed' : 'relative', // Usa posición fija solo cuando se arrastra
+            minWidth: '150px', // Tamaño pequeño ajustable
+            lineHeight: '1.5',
+            wordWrap: 'break-word',
           }}
         >
-          {/* Simula los agujeros de la libreta a la izquierda */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '0',
-              left: '-10px',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
-          >
-            {[...Array(10)].map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: '#e0e0e0',
-                  margin: '2px 0',
-                }}
-              />
-            ))}
-          </div>
-          <div
-            dangerouslySetInnerHTML={{ __html: note.content }}
-            style={{ marginBottom: '10px' }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {/* Botones de Editar y Eliminar al hacer hover */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '5px', position: 'absolute', top: '5px', right: '5px' }}>
             <button
               onClick={() => onEditNote(note)}
               style={{
-                background: 'turquoise',
+                background: '#4caf50',
                 color: '#fff',
                 border: 'none',
-                borderRadius: '3px',
+                borderRadius: '50%',
                 padding: '5px',
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
+              title="Editar"
             >
-              Edit Note
+              <EditIcon fontSize="small" />
             </button>
             <button
               onClick={() => onDeleteNote(note.id, columnId)}
@@ -89,14 +72,26 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, index, onEditNote, onDeleteNo
                 background: '#e74c3c',
                 color: '#fff',
                 border: 'none',
-                borderRadius: '3px',
+                borderRadius: '50%',
                 padding: '5px',
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
+              title="Eliminar"
             >
-              Delete
+              <DeleteIcon fontSize="small" />
             </button>
           </div>
+
+          {/* Contenido de la nota */}
+          <p style={{ margin: '0', fontSize: '14px', fontWeight: '400' }}>{note.content}</p>
+
+          {/* Título fuera del contenedor */}
+          <h3 style={{ margin: '10px 0 0 0', fontWeight: '500', textAlign: 'center', color: '#333' }}>
+            {note.title}
+          </h3>
         </div>
       )}
     </Draggable>

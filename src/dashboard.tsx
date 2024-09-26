@@ -7,9 +7,12 @@ import EditableInput from './inputs/EditableInput';
 import AddColumn from './columns/AddColumn';
 import CreateNoteModal from './modal/CreateNoteModal';
 import EditNoteModal from './modal/EditNoteModal';
-import NoteCard from './draggable/NoteCard'; // Importa el nuevo componente NoteCard
+import NoteCard from './draggable/NoteCard';
 import { v4 as uuidv4 } from 'uuid';
-import AppBar from './appBar/AppBar'; //Importacion del AppBar
+import AppBar from './appBar/AppBar';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Tooltip from '@mui/material/Tooltip';
 
 const Kanban: React.FC = () => {
   const { state, dispatch } = useContext(KanbanContext);
@@ -24,10 +27,8 @@ const Kanban: React.FC = () => {
     if (!destination) return;
 
     if (type === 'column') {
-      // Maneja el movimiento de columnas
       dispatch({ type: 'MOVE_COLUMN', sourceIndex: source.index, destIndex: destination.index });
     } else {
-      // Maneja el movimiento de notas entre columnas o hacia/fuera de la zona muerta
       const sourceId = source.droppableId === 'dead-zone' ? 'looseNotes' : source.droppableId;
       const destId = destination.droppableId === 'dead-zone' ? 'looseNotes' : destination.droppableId;
 
@@ -49,6 +50,8 @@ const Kanban: React.FC = () => {
       author: 'Author',
       category: columnId,
       content: content,
+      title: 'New Note',
+      tags: [],
     };
 
     dispatch({ type: 'ADD_NOTE', columnId, note: newNote });
@@ -108,42 +111,90 @@ const Kanban: React.FC = () => {
   };
 
   return (
-    <div style={{ position: 'relative', padding: '10px', backgroundColor: '#fff', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', }}>
+    <div
+      style={{
+        position: 'relative',
+        padding: '10px',
+        backgroundColor: '#fff',
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+        overflowX: 'hidden', // Evita desbordamiento horizontal innecesario
+        overflowY: 'auto', // Permite desbordamiento vertical
+      }}
+    >
       <AppBar />
       <AddColumn />
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="all-columns" direction="horizontal" type="column">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef} style={{ display: 'flex' }}>
-              {state.columns.map((column, index) => (
-                <Draggable key={column.id} draggableId={column.id} index={index}>
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="paper"
-                    >
-                      <EditableInput
-                        initialValue={column.title}
-                        onConfirm={(newTitle) => handleChangeTitle(column.id, newTitle)}
-                        placeholder="Edit title"
-                      />
-                      <Column
-                        column={column}
-                        index={index}
-                        onDeleteNote={handleDeleteNote}
-                        onEditNote={handleEditNote}
-                      />
-                      <button onClick={() => handleDeleteColumn(column.id)}>Delete Column</button>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
+        {/* Contenedor scrollable para las columnas */}
+        <div
+          style={{
+            display: 'flex',
+            overflowX: 'auto', // Hacer scrollable horizontal
+            padding: '10px 0', // Espacio para facilitar el scroll
+          }}
+        >
+          <Droppable droppableId="all-columns" direction="horizontal" type="column">
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{
+                  display: 'flex',
+                  position: 'relative',
+                }}
+              >
+                {state.columns.map((column, index) => (
+                  <Draggable key={column.id} draggableId={column.id} index={index}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className="paper"
+                        style={{
+                          ...provided.draggableProps.style,
+                          zIndex: snapshot.isDragging ? 1000 : 1, // Asegura que la columna esté en primer plano al arrastrar
+                        }}
+                      >
+                        <EditableInput
+                          initialValue={column.title}
+                          onConfirm={(newTitle) => handleChangeTitle(column.id, newTitle)}
+                          placeholder="Edit title"
+                        />
+                        <Column
+                          column={column}
+                          index={index}
+                          onDeleteNote={handleDeleteNote}
+                          onEditNote={handleEditNote}
+                        />
+                        {/* Botón de eliminar columna actualizado */}
+                        <Tooltip title="Eliminar columna">
+                          <button
+                            onClick={() => handleDeleteColumn(column.id)}
+                            style={{
+                              background: '#e74c3c',
+                              color: '#fff',
+                              border: 'none',
+                              borderRadius: '50%',
+                              padding: '8px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              marginTop: '10px',
+                            }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </button>
+                        </Tooltip>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </div>
 
         {/* Zona muerta para notas no asignadas */}
         <Droppable droppableId="dead-zone" type="note">
@@ -157,6 +208,7 @@ const Kanban: React.FC = () => {
                 border: '2px dashed #ccc',
                 minHeight: '150px',
                 backgroundColor: '#f9f9f9',
+                zIndex: 0,
               }}
             >
               <h3>Note's dead zone</h3>
@@ -182,15 +234,23 @@ const Kanban: React.FC = () => {
           position: 'absolute',
           top: '135px',
           right: '10px',
-          backgroundColor: '#4caf50',
-          color: 'white',
-          padding: '10px',
+          backgroundColor: '#c1e1c1',
+          color: '#333',
+          padding: '10px 15px',
           border: 'none',
-          borderRadius: '5px',
+          borderRadius: '50%',
           cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
+          transition: 'background-color 0.3s, transform 0.2s',
         }}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#a8dadc')}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#c1e1c1')}
       >
-        Create Note
+        <AddIcon style={{ fontSize: '20px', marginRight: '5px' }} />
+        Create note
       </button>
 
       <CreateNoteModal
