@@ -108,7 +108,7 @@ const Kanban: React.FC = () => {
   };
 
   return (
-    <div style={{ position: 'relative', padding: '10px' }}>
+    <div style={{ position: 'relative', padding: '10px', backgroundColor: '#fff', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', }}>
       <AppBar />
       <AddColumn />
       <DragDropContext onDragEnd={onDragEnd}>
