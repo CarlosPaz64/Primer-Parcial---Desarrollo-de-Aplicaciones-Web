@@ -40,7 +40,7 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, index, onEditNote, onDeleteNo
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',
-            zIndex: snapshot.isDragging ? 1000 : 1, // Controla la superposición
+            zIndex: snapshot.isDragging ? 1 : 'auto', // Controla la superposición
             position: snapshot.isDragging ? 'fixed' : 'relative', // Usa posición fija solo cuando se arrastra
             minWidth: '150px', // Tamaño pequeño ajustable
             lineHeight: '1.5',
