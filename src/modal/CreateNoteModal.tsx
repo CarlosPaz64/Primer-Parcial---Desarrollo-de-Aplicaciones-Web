@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import CategoriesModal from './CategoriesModal';
+import TagsModal from './TagsModal';
 
 const ModalOverlay = styled(motion.div)`
   position: fixed;
@@ -52,8 +54,8 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('');
-  const [tags, setTags] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedColumn, setSelectedColumn] = useState('');
 
   const handleAddNote = () => {
@@ -64,8 +66,8 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     onAddNote(content, selectedColumn);
     setTitle('');
     setContent('');
-    setCategory('');
-    setTags('');
+    setSelectedCategories([]);
+    setSelectedTags([]);
     setSelectedColumn('');
     onClose();
   };
@@ -103,21 +105,30 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 padding: '8px',
                 borderRadius: '5px',
                 minHeight: '100px',
-                resize: 'vertical',
+                resize: 'none',
               }}
             />
+            {/* Componente de categorías */}
+            <CategoriesModal
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
+            />
+            {/* Área que muestra las categorías seleccionadas */}
             <input
               type="text"
-              placeholder="Categoría/s (opcional)"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              readOnly
+              value={selectedCategories.join(', ')}
+              placeholder="Categorías seleccionadas"
               style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
             />
+            {/* Componente de etiquetas */}
+            <TagsModal selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+            {/* Área que muestra las etiquetas seleccionadas */}
             <input
               type="text"
-              placeholder="Etiqueta/s (opcional)"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
+              readOnly
+              value={selectedTags.join(', ')}
+              placeholder="Etiquetas seleccionadas"
               style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
             />
             <select

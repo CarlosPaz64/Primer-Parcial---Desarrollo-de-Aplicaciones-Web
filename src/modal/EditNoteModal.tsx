@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import CategoriesModal from './CategoriesModal';
+import TagsModal from './TagsModal';
+import { Note } from '../context-reducer/KanbanContext'; // Importa el tipo Note
 
 const ModalOverlay = styled(motion.div)`
   position: fixed;
@@ -40,28 +43,42 @@ const modalContentVariants = {
 interface EditNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSaveNote: (content: string) => void;
-  initialContent: string;
+  onSaveNote: (updatedNote: Note) => void;
+  note: Note | null;
 }
 
 const EditNoteModal: React.FC<EditNoteModalProps> = ({
   isOpen,
   onClose,
   onSaveNote,
-  initialContent,
+  note,
 }) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState(initialContent);
-  const [category, setCategory] = useState('');
-  const [tags, setTags] = useState('');
+  const [title, setTitle] = useState(note?.title || '');
+  const [content, setContent] = useState(note?.content || '');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(note?.category ? [note.category] : []);
+  const [selectedTags, setSelectedTags] = useState<string[]>(note?.tags || []);
 
   useEffect(() => {
-    setContent(initialContent);
-  }, [initialContent]);
+    if (note) {
+      setTitle(note.title);
+      setContent(note.content);
+      setSelectedCategories(note.category ? [note.category] : []);
+      setSelectedTags(note.tags || []);
+    }
+  }, [note]);
 
   const handleSaveNote = () => {
-    onSaveNote(content);
-    onClose();
+    if (note) {
+      const updatedNote: Note = {
+        ...note,
+        title,
+        content,
+        category: selectedCategories[0] || '',
+        tags: selectedTags,
+      };
+      onSaveNote(updatedNote);
+      onClose();
+    }
   };
 
   return (
@@ -99,23 +116,28 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
                 padding: '8px',
                 borderRadius: '5px',
                 minHeight: '100px',
-                resize: 'vertical',
+                resize: 'none',
               }}
             />
             <input
               type="text"
-              placeholder="Categoría/s (opcional)"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              readOnly
+              value={selectedCategories.join(', ')}
+              placeholder="Categorías seleccionadas"
               style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
+            />
+            <CategoriesModal
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
             />
             <input
               type="text"
-              placeholder="Etiqueta/s (opcional)"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
+              readOnly
+              value={selectedTags.join(', ')}
+              placeholder="Etiquetas seleccionadas"
               style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
             />
+            <TagsModal selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
             <button
               onClick={handleSaveNote}
               style={{

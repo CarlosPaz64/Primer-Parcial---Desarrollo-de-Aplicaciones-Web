@@ -18,7 +18,6 @@ const Kanban: React.FC = () => {
   const { state, dispatch } = useContext(KanbanContext);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [currentNoteContent, setCurrentNoteContent] = useState('');
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
 
   const onDragEnd = (result: DropResult) => {
@@ -58,18 +57,12 @@ const Kanban: React.FC = () => {
   };
 
   const handleEditNote = (note: Note) => {
-    setCurrentNoteContent(note.content);
     setCurrentNote(note);
     setIsEditModalOpen(true);
   };
 
-  const handleSaveNote = (newContent: string) => {
+  const handleSaveNote = (updatedNote: Note) => {
     if (currentNote) {
-      const updatedNote: Note = {
-        ...currentNote,
-        content: newContent,
-      };
-
       const column = state.columns.find((col) =>
         col.notes.some((note) => note.id === currentNote.id)
       );
@@ -129,6 +122,8 @@ const Kanban: React.FC = () => {
           style={{
             display: 'flex',
             overflowX: 'auto', // Hacer scrollable horizontal
+            zIndex: '0',
+            position: 'relative',
             padding: '10px 0', // Espacio para facilitar el scroll
           }}
         >
@@ -140,6 +135,7 @@ const Kanban: React.FC = () => {
                 style={{
                   display: 'flex',
                   position: 'relative',
+                  zIndex: '0',
                 }}
               >
                 {state.columns.map((column, index) => (
@@ -152,7 +148,7 @@ const Kanban: React.FC = () => {
                         className="paper"
                         style={{
                           ...provided.draggableProps.style,
-                          zIndex: snapshot.isDragging ? 1000 : 1, // Asegura que la columna esté en primer plano al arrastrar
+                          zIndex: snapshot.isDragging ? 1000 : 'auto', // Asegura que la columna esté en primer plano al arrastrar
                         }}
                       >
                         <EditableInput
@@ -265,7 +261,7 @@ const Kanban: React.FC = () => {
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           onSaveNote={handleSaveNote}
-          initialContent={currentNoteContent}
+          note={currentNote} // Pasa la nota completa al modal
         />
       )}
     </div>
