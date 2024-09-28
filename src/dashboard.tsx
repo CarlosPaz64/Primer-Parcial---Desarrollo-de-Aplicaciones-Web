@@ -199,13 +199,18 @@ const Kanban: React.FC = () => {
               {...provided.droppableProps}
               ref={provided.innerRef}
               style={{
-                marginTop: '20px',
                 padding: '20px',
                 border: '2px dashed #ccc',
+                display: 'flex',
                 minHeight: '150px',
                 backgroundColor: '#f9f9f9',
+                flexDirection: 'row', // Mantén la dirección de fila
+                alignItems: 'center', // Centra los elementos verticalmente en la fila
+                justifyContent: 'flex-start', // Alinea los elementos al inicio
+                gap: '10px', // Añade espacio entre los elementos si lo necesitas
                 zIndex: 0,
               }}
+              
             >
               <h3>Note's dead zone</h3>
               {state.looseNotes.map((note, index) => (
