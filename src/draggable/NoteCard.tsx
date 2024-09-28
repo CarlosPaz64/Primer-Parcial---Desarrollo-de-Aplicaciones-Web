@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 // Función para obtener un color pastel aleatorio
 const getRandomPastelColor = () => {
-  const pastelColors = ['#FFD1DC', '#D4F1F4', '#C3FDB8', '#FFFACD', '#FAD6A5'];
+  const pastelColors = ['#FFD1DC', '#D4F1F4', '#C3FDB8', '#FFFACD', '#FAD6A5', '#F0A8D0', '#BB9AB1', '#E7F0DC', '#E8C5E5', '#DFD3C3', '#EF9C66'];
   return pastelColors[Math.floor(Math.random() * pastelColors.length)];
 };
 
