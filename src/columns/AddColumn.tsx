@@ -1,21 +1,37 @@
 // AddColumn.tsx
 import React, { useState, useContext } from 'react';
-import { KanbanContext } from '../context-reducer/KanbanContext'; // Asegúrate de que la ruta sea correcta
+import { KanbanContext } from '../context-reducer/KanbanContext';
 import { v4 as uuidv4 } from 'uuid';
+import Tooltip from '@mui/material/Tooltip'; // Importa Tooltip de Material-UI
+import ConfirmationModal from '../confirmsModal/ConfirmationModal';
+import WarningModal from '../confirmsModal/WarningModal';
+import LimitReachedModal from '../confirmsModal/LimitReachedModal';
 
 const AddColumn: React.FC = () => {
   const { state, dispatch } = useContext(KanbanContext);
   const [newColumnTitle, setNewColumnTitle] = useState('');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+  const [isLimitReachedModalOpen, setIsLimitReachedModalOpen] = useState(false);
 
-  const handleAddColumn = () => {
-    // Verificar si ya existen 5 columnas
-    if (state.columns.length >= 5) {
-      alert('You can only create 5 columns. Please, delete one or edit.');
+  const handleAddColumnClick = () => {
+    // Verificar si el título de la columna está vacío
+    if (!newColumnTitle.trim()) {
+      setIsWarningModalOpen(true); // Mostrar modal de advertencia si el título está vacío
       return;
     }
 
-    // Verificar si el título de la columna no está vacío
-    if (!newColumnTitle.trim()) return;
+    // Mostrar el modal de confirmación si el título es válido
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmAddColumn = () => {
+    // Verificar si ya existen 5 columnas
+    if (state.columns.length >= 5) {
+      setIsLimitReachedModalOpen(true); // Mostrar modal de límite alcanzado
+      setIsConfirmModalOpen(false);
+      return;
+    }
 
     // Crear una nueva columna
     const newColumn = {
@@ -26,6 +42,7 @@ const AddColumn: React.FC = () => {
 
     dispatch({ type: 'ADD_COLUMN', column: newColumn });
     setNewColumnTitle(''); // Limpiar el input después de añadir la columna
+    setIsConfirmModalOpen(false); // Cerrar el modal de confirmación
   };
 
   return (
@@ -44,19 +61,42 @@ const AddColumn: React.FC = () => {
           boxSizing: 'border-box',
         }}
       />
-      <button
-        onClick={handleAddColumn}
-        style={{
-          padding: '8px 12px',
-          borderRadius: '4px',
-          border: 'none',
-          backgroundColor: '#4caf50',
-          color: 'white',
-          cursor: 'pointer',
-        }}
-      >
-        Add Column
-      </button>
+      <Tooltip title="Agregar nueva columna">
+        <button
+          onClick={handleAddColumnClick}
+          style={{
+            padding: '8px 12px',
+            borderRadius: '4px',
+            border: 'none',
+            backgroundColor: '#4caf50',
+            color: 'white',
+            cursor: 'pointer',
+          }}
+        >
+          Add Column
+        </button>
+      </Tooltip>
+
+      {/* Modal de confirmación */}
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmAddColumn}
+        message="¿Estás seguro de que quieres añadir esta columna?"
+      />
+
+      {/* Modal de advertencia */}
+      <WarningModal
+        isOpen={isWarningModalOpen}
+        onClose={() => setIsWarningModalOpen(false)}
+        message="No puedes crear columnas sin nombre."
+      />
+
+      {/* Modal de límite alcanzado */}
+      <LimitReachedModal
+        isOpen={isLimitReachedModalOpen}
+        onClose={() => setIsLimitReachedModalOpen(false)}
+      />
     </div>
   );
 };

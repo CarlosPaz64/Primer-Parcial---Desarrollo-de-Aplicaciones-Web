@@ -14,11 +14,21 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 
+// Importar los nuevos modales
+import DeleteColumnModal from './confirmsModal/DeleteColumnModal';
+import DeleteNoteModal from './confirmsModal/DeleteNoteModal';
+import ChangeTitleModal from './confirmsModal/ChangeTitleModal';
+
 const Kanban: React.FC = () => {
   const { state, dispatch } = useContext(KanbanContext);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteColumnModalOpen, setIsDeleteColumnModalOpen] = useState(false);
+  const [isDeleteNoteModalOpen, setIsDeleteNoteModalOpen] = useState(false);
+  const [isChangeTitleModalOpen, setIsChangeTitleModalOpen] = useState(false);
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
+  const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
+  const [selectedNote, setSelectedNote] = useState<{ noteId: string; columnId: string } | null>(null);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, type } = result;
@@ -87,19 +97,40 @@ const Kanban: React.FC = () => {
     }
   };
 
-  const handleChangeTitle = (columnId: string, newTitle: string) => {
-    dispatch({ type: 'CHANGE_COLUMN_TITLE', columnId, newTitle });
+  // Handlers modificados para abrir los modales de confirmación
+  const openDeleteColumnModal = (columnId: string) => {
+    setSelectedColumnId(columnId);
+    setIsDeleteColumnModalOpen(true);
   };
 
-  const handleDeleteColumn = (columnId: string) => {
-    if (window.confirm('Are you sure you want to delete this column?')) {
-      dispatch({ type: 'DELETE_COLUMN', columnId });
+  const confirmDeleteColumn = () => {
+    if (selectedColumnId) {
+      dispatch({ type: 'DELETE_COLUMN', columnId: selectedColumnId });
+      setIsDeleteColumnModalOpen(false);
     }
   };
 
-  const handleDeleteNote = (noteId: string, columnId: string) => {
-    if (window.confirm('Are you sure you want to delete this note?')) {
-      dispatch({ type: 'DELETE_NOTE', columnId, noteId });
+  const openDeleteNoteModal = (noteId: string, columnId: string) => {
+    setSelectedNote({ noteId, columnId });
+    setIsDeleteNoteModalOpen(true);
+  };
+
+  const confirmDeleteNote = () => {
+    if (selectedNote) {
+      dispatch({ type: 'DELETE_NOTE', columnId: selectedNote.columnId, noteId: selectedNote.noteId });
+      setIsDeleteNoteModalOpen(false);
+    }
+  };
+
+  const openChangeTitleModal = (columnId: string) => {
+    setSelectedColumnId(columnId);
+    setIsChangeTitleModalOpen(true);
+  };
+
+  const confirmChangeTitle = (newTitle: string) => {
+    if (selectedColumnId) {
+      dispatch({ type: 'CHANGE_COLUMN_TITLE', columnId: selectedColumnId, newTitle });
+      setIsChangeTitleModalOpen(false);
     }
   };
 
@@ -110,21 +141,20 @@ const Kanban: React.FC = () => {
         padding: '10px',
         backgroundColor: '#fff',
         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-        overflowX: 'hidden', // Evita desbordamiento horizontal innecesario
-        overflowY: 'auto', // Permite desbordamiento vertical
+        overflowX: 'hidden',
+        overflowY: 'auto',
       }}
     >
       <AppBar />
       <AddColumn />
       <DragDropContext onDragEnd={onDragEnd}>
-        {/* Contenedor scrollable para las columnas */}
         <div
           style={{
             display: 'flex',
-            overflowX: 'auto', // Hacer scrollable horizontal
+            overflowX: 'auto',
             zIndex: '0',
             position: 'relative',
-            padding: '10px 0', // Espacio para facilitar el scroll
+            padding: '10px 0',
           }}
         >
           <Droppable droppableId="all-columns" direction="horizontal" type="column">
@@ -148,24 +178,22 @@ const Kanban: React.FC = () => {
                         className="paper"
                         style={{
                           ...provided.draggableProps.style,
-                          zIndex: snapshot.isDragging ? 1000 : 'auto', // Asegura que la columna esté en primer plano al arrastrar
+                          zIndex: snapshot.isDragging ? 1000 : 'auto',
                         }}
                       >
                         <EditableInput
                           initialValue={column.title}
-                          onConfirm={(newTitle) => handleChangeTitle(column.id, newTitle)}
-                          placeholder="Edit title"
+                          onConfirm={() => openChangeTitleModal(column.id)} // Abre el modal para cambiar el título
                         />
                         <Column
                           column={column}
                           index={index}
-                          onDeleteNote={handleDeleteNote}
+                          onDeleteNote={openDeleteNoteModal}
                           onEditNote={handleEditNote}
                         />
-                        {/* Botón de eliminar columna actualizado */}
                         <Tooltip title="Eliminar columna">
                           <button
-                            onClick={() => handleDeleteColumn(column.id)}
+                            onClick={() => openDeleteColumnModal(column.id)}
                             style={{
                               background: '#e74c3c',
                               color: '#fff',
@@ -192,7 +220,6 @@ const Kanban: React.FC = () => {
           </Droppable>
         </div>
 
-        {/* Zona muerta para notas no asignadas */}
         <Droppable droppableId="dead-zone" type="note">
           {(provided) => (
             <div
@@ -204,13 +231,12 @@ const Kanban: React.FC = () => {
                 display: 'flex',
                 minHeight: '150px',
                 backgroundColor: '#f9f9f9',
-                flexDirection: 'row', // Mantén la dirección de fila
-                alignItems: 'center', // Centra los elementos verticalmente en la fila
-                justifyContent: 'flex-start', // Alinea los elementos al inicio
-                gap: '10px', // Añade espacio entre los elementos si lo necesitas
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                gap: '10px',
                 zIndex: 0,
               }}
-              
             >
               <h3>Note's dead zone</h3>
               {state.looseNotes.map((note, index) => (
@@ -219,7 +245,7 @@ const Kanban: React.FC = () => {
                   note={note}
                   index={index}
                   onEditNote={handleEditNote}
-                  onDeleteNote={handleDeleteNote}
+                  onDeleteNote={(noteId) => openDeleteNoteModal(noteId, 'looseNotes')}
                   columnId="looseNotes"
                 />
               ))}
@@ -229,6 +255,7 @@ const Kanban: React.FC = () => {
         </Droppable>
       </DragDropContext>
 
+      <Tooltip title="Crear nueva nota">
       <button
         onClick={() => setIsCreateModalOpen(true)}
         style={{
@@ -239,7 +266,7 @@ const Kanban: React.FC = () => {
           color: '#333',
           padding: '10px 15px',
           border: 'none',
-          borderRadius: '50%',
+          borderRadius: '10%',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -253,6 +280,7 @@ const Kanban: React.FC = () => {
         <AddIcon style={{ fontSize: '20px', marginRight: '5px' }} />
         Create note
       </button>
+      </Tooltip>
 
       <CreateNoteModal
         isOpen={isCreateModalOpen}
@@ -266,9 +294,28 @@ const Kanban: React.FC = () => {
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           onSaveNote={handleSaveNote}
-          note={currentNote} // Pasa la nota completa al modal
+          note={currentNote}
         />
       )}
+
+      {/* Renderiza los nuevos modales */}
+      <DeleteColumnModal
+        isOpen={isDeleteColumnModalOpen}
+        onClose={() => setIsDeleteColumnModalOpen(false)}
+        onConfirm={confirmDeleteColumn}
+      />
+
+      <DeleteNoteModal
+        isOpen={isDeleteNoteModalOpen}
+        onClose={() => setIsDeleteNoteModalOpen(false)}
+        onConfirm={confirmDeleteNote}
+      />
+
+      <ChangeTitleModal
+        isOpen={isChangeTitleModalOpen}
+        onClose={() => setIsChangeTitleModalOpen(false)}
+        onConfirm={confirmChangeTitle}
+      />
     </div>
   );
 };

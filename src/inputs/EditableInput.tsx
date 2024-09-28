@@ -1,32 +1,33 @@
 // EditableInput.tsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import Tooltip from '@mui/material/Tooltip'; // Import Tooltip correctly
 
 interface EditableInputProps {
   initialValue: string;
-  onConfirm: (value: string) => void;
-  placeholder?: string;
+  onConfirm: () => void;
 }
 
-const EditableInput: React.FC<EditableInputProps> = ({ initialValue, onConfirm, placeholder }) => {
-  const [value, setValue] = useState(initialValue);
-
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  const handleBlur = () => {
-    onConfirm(value.trim());
-  };
-
+const EditableInput: React.FC<EditableInputProps> = ({ initialValue, onConfirm }) => {
   return (
-    <input
-      type="text"
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onBlur={handleBlur}
-      placeholder={placeholder || 'Edit value'}
-      style={{ marginBottom: '10px', padding: '5px' }}
-    />
+    <Tooltip title="Editar título">
+      <span> {/* Use a span to ensure there's a single child inside Tooltip */}
+        <button
+          onClick={onConfirm}
+          style={{
+            background: '#295F98',
+            border: 'none',
+            color: '#D2E0FB',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            padding: '5px',
+            marginBottom: '10px',
+            textAlign: 'left',
+          }}
+        >
+          {initialValue}
+        </button>
+      </span>
+    </Tooltip>
   );
 };
 
