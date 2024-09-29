@@ -30,16 +30,33 @@ const Kanban: React.FC = () => {
   const [selectedNote, setSelectedNote] = useState<{ noteId: string; columnId: string } | null>(null);
 
   const onDragEnd = (result: DropResult) => {
-    const { source, destination, type } = result;
-
+    const { source, destination, type, draggableId } = result;
+  
+    // Verifica si no hay destino
     if (!destination) return;
-
+  
+    // Mover columnas
     if (type === 'column') {
       dispatch({ type: 'MOVE_COLUMN', sourceIndex: source.index, destIndex: destination.index });
-    } else {
+    } 
+    // Mover conjunto de notas colapsadas entre columnas
+    else if (draggableId.startsWith('collapsed-')) {
+      const sourceColumnId = source.droppableId;
+      const destColumnId = destination.droppableId;
+  
+      if (sourceColumnId !== destColumnId) {
+        dispatch({
+          type: 'MOVE_COLLAPSED_NOTES',
+          sourceColumnId,
+          destColumnId,
+        });
+      }
+    } 
+    // Mover notas individuales
+    else {
       const sourceId = source.droppableId === 'dead-zone' ? 'looseNotes' : source.droppableId;
       const destId = destination.droppableId === 'dead-zone' ? 'looseNotes' : destination.droppableId;
-
+  
       if (sourceId && destId) {
         dispatch({
           type: 'MOVE_NOTE',
@@ -50,7 +67,7 @@ const Kanban: React.FC = () => {
         });
       }
     }
-  };
+  };  
 
   const handleAddNote = (content: string, columnId: string) => {
     const newNote: Note = {

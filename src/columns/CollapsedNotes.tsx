@@ -2,6 +2,7 @@
 import React from 'react';
 import { Note } from '../context-reducer/KanbanContext';
 import NoteCard from '../draggable/NoteCard';
+import { Draggable } from 'react-beautiful-dnd';
 
 interface CollapsedNotesProps {
   column: {
@@ -22,41 +23,53 @@ const CollapsedNotes: React.FC<CollapsedNotesProps> = ({
   const displayedNotes = column.notes.slice(0, 5); // Mostrar hasta 5 notas
 
   return (
-    <div
-      onClick={onExpand}
-      style={{
-        cursor: 'pointer',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100px',
-      }}
-    >
-      {displayedNotes.map((note, noteIndex) => (
+    <Draggable draggableId={`collapsed-${column.id}`} index={0}>
+      {(provided) => (
         <div
-          key={note.id}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          className="draggable"
           style={{
-            position: 'absolute',
-            marginTop: noteIndex === 0 ? 0 : '-20px',
-            zIndex: 5 - noteIndex,
-            transform: `translate(${noteIndex * 2}px, ${noteIndex * 5}px)`,
-            transition: 'transform 0.3s',
+            ...provided.draggableProps.style,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '100px',
+            width: '200px',
+            margin: '0 auto',
+            border: '1px dashed lightgray',
+            boxSizing: 'border-box',
+            position: 'relative', // Posicionamiento relativo para permitir superposición
           }}
+          onClick={onExpand}
         >
-          <NoteCard
-            note={note}
-            index={noteIndex}
-            onEditNote={onEditNote}
-            onDeleteNote={onDeleteNote}
-            columnId={column.id}
-            isDraggable={false}
-            isEditable={false}
-          />
+          {displayedNotes.map((note, noteIndex) => (
+            <div
+              key={note.id}
+              style={{
+                position: 'absolute', // Absoluto para que se superpongan
+                top: `${noteIndex * 10}px`, // Desplazamiento gradual hacia abajo
+                left: `${noteIndex * 5}px`, // Desplazamiento gradual hacia la derecha
+                zIndex: 5 - noteIndex,
+                transition: 'transform 0.3s', // Transición suave si se necesita
+              }}
+            >
+              <NoteCard
+                note={note}
+                index={noteIndex}
+                onEditNote={onEditNote}
+                onDeleteNote={onDeleteNote}
+                columnId={column.id}
+                isDraggable={false}
+                isEditable={false}
+              />
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      )}
+    </Draggable>
   );
 };
 

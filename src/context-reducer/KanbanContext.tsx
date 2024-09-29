@@ -98,7 +98,9 @@ type Action =
   | { type: 'DELETE_NOTE'; columnId: string; noteId: string }
   | { type: 'DELETE_COLUMN'; columnId: string }
   | { type: 'ADD_LOOSE_NOTE'; note: Note }
-  | { type: 'ADD_COLUMN'; column: Column };
+  | { type: 'ADD_COLUMN'; column: Column }
+  | { type: 'MOVE_COLLAPSED_NOTES'; sourceColumnId: string; destColumnId: string };
+
 
 const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
   switch (action.type) {
@@ -184,6 +186,29 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
         };
       }
 
+      return state;
+    }
+
+    case 'MOVE_COLLAPSED_NOTES': {
+      const { sourceColumnId, destColumnId } = action;
+
+      const sourceColumn = state.columns.find(col => col.id === sourceColumnId);
+      const destColumn = state.columns.find(col => col.id === destColumnId);
+
+      if (sourceColumn && destColumn) {
+        // Mueve todas las notas del sourceColumn a destColumn
+        const movedNotes = [...sourceColumn.notes];
+        return {
+          ...state,
+          columns: state.columns.map(col =>
+            col.id === sourceColumnId
+              ? { ...col, notes: [] } // Vacía la columna de origen
+              : col.id === destColumnId
+              ? { ...col, notes: [...destColumn.notes, ...movedNotes] } // Añade notas a la columna de destino
+              : col
+          ),
+        };
+      }
       return state;
     }
 
