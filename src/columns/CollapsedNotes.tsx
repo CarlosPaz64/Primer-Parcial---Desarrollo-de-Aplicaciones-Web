@@ -43,8 +43,8 @@ const CollapsedNotes: React.FC<CollapsedNotesProps> = ({
                 margin: '0 auto',
                 border: '1px dashed lightgray',
                 boxSizing: 'border-box',
-                position: 'relative', // Posicionamiento relativo para permitir superposición
-                zIndex: snapshot.isDragging ? 9999 : 'auto', // Aumenta z-index cuando se arrastra
+                position: 'relative', // Cambia a 'relative' durante el arrastre
+                zIndex: snapshot.isDragging ? 9999 : 'auto',
               }}
               onClick={onExpand}
             >
@@ -52,9 +52,9 @@ const CollapsedNotes: React.FC<CollapsedNotesProps> = ({
                 <div
                   key={note.id}
                   style={{
-                    position: 'absolute', // Absoluto para que se superpongan
-                    top: `${noteIndex * 10}px`, // Desplazamiento gradual hacia abajo
-                    left: `${noteIndex * 5}px`, // Desplazamiento gradual hacia la derecha
+                    position: 'absolute',
+                    top: `${noteIndex * 10}px`,
+                    left: `${noteIndex * 5}px`,
                     zIndex: 5 - noteIndex,
                   }}
                 >

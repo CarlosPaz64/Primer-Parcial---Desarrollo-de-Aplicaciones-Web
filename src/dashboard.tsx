@@ -167,10 +167,11 @@ const Kanban: React.FC = () => {
         <div
           style={{
             display: 'flex',
-            overflowX: 'auto',
             zIndex: '0',
+            overflowX: 'hidden',
             position: 'relative',
             padding: '10px 0',
+            whiteSpace: 'nowrap',
           }}
         >
           <Droppable droppableId="all-columns" direction="horizontal" type="column">
@@ -195,6 +196,7 @@ const Kanban: React.FC = () => {
                         style={{
                           ...provided.draggableProps.style,
                           zIndex: snapshot.isDragging ? 1000 : 'auto',
+                          whiteSpace: 'normal',
                         }}
                       >
                         <EditableInput

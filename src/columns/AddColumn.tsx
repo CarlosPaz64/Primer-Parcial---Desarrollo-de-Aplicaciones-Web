@@ -26,8 +26,8 @@ const AddColumn: React.FC = () => {
   };
 
   const handleConfirmAddColumn = () => {
-    // Verificar si ya existen 8 columnas
-    if (state.columns.length >= 8) {
+    // Verificar si ya existen 4 columnas
+    if (state.columns.length >= 4) {
       setIsLimitReachedModalOpen(true); // Mostrar modal de límite alcanzado
       setIsConfirmModalOpen(false);
       return;

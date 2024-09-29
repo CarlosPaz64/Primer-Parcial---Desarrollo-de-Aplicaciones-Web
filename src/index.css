@@ -54,7 +54,7 @@ input, select {
 .paper {
   padding: 10px 20px;
   background-color: #fff;
-  width: 350px;
+  width: 335px;
   z-index: 0; /* Asegúrate de que el z-index no interfiera con las notas */
   overflow: visible; /* Evita que los elementos arrastrados se oculten al moverse */
 }

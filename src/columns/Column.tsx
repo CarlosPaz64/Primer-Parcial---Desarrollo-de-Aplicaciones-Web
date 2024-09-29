@@ -1,4 +1,3 @@
-// Column.tsx
 import React, { useState } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { Note } from '../context-reducer/KanbanContext';
@@ -27,12 +26,15 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
             {...provided.droppableProps}
             ref={provided.innerRef}
             style={{
-              minHeight: '50px',
-              padding: '0',
+              minHeight: '150px', // Aumentamos el espacio mínimo para evitar colisiones
+              padding: '10px',
               position: 'relative',
               zIndex: 0,
-              overflow: 'visible',
               background: 'transparent',
+              borderRadius: '8px',
+              border: '1px solid #ddd', // Opcional: para que sea más claro el contorno
+              margin: '0 15px',
+              boxSizing: 'border-box',
             }}
           >
             {!expanded ? (
@@ -50,6 +52,7 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
                 onDeleteNote={onDeleteNote}
               />
             )}
+
             {provided.placeholder}
 
             {/* Título de la columna */}
