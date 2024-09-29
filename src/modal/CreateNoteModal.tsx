@@ -1,10 +1,10 @@
-// CreateNoteModal.tsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import CategoriesModal from './CategoriesModal';
 import TagsModal from './TagsModal';
 
+// Estilos del modal principal
 const ModalOverlay = styled(motion.div)`
   position: fixed;
   top: 0;
@@ -15,7 +15,7 @@ const ModalOverlay = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  z-index: 1000;
 `;
 
 const ModalContent = styled(motion.div)`
@@ -39,6 +39,45 @@ const modalContentVariants = {
   exit: { y: '-100vh', transition: { ease: 'easeInOut' } },
 };
 
+// Componente del modal de confirmación
+const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void }> = ({
+  onConfirm,
+  onCancel,
+}) => (
+  <ModalOverlay initial="initial" animate="animate" exit="exit" variants={modalOverlayVariants}>
+    <ModalContent initial="initial" animate="animate" exit="exit" variants={modalContentVariants}>
+      <h4>¿Estás seguro de que quieres guardar esta nota?</h4>
+      <button
+        onClick={onConfirm}
+        style={{
+          backgroundColor: '#4caf50',
+          color: 'white',
+          padding: '10px',
+          border: 'none',
+          borderRadius: '5px',
+          marginRight: '10px',
+          cursor: 'pointer',
+        }}
+      >
+        Confirmar
+      </button>
+      <button
+        onClick={onCancel}
+        style={{
+          backgroundColor: '#f44336',
+          color: 'white',
+          padding: '10px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        Cancelar
+      </button>
+    </ModalContent>
+  </ModalOverlay>
+);
+
 interface CreateNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -57,8 +96,13 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedColumn, setSelectedColumn] = useState('');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // Estado para el modal de confirmación
 
-  const handleAddNote = () => {
+  const handleSave = () => {
+    setIsConfirmModalOpen(true); // Abre el modal de confirmación
+  };
+
+  const handleConfirmSave = () => {
     if (!selectedColumn) {
       alert('Por favor, selecciona una columna antes de agregar una nota.');
       return;
@@ -69,7 +113,8 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     setSelectedCategories([]);
     setSelectedTags([]);
     setSelectedColumn('');
-    onClose();
+    setIsConfirmModalOpen(false); // Cierra el modal de confirmación
+    onClose(); // Cierra el modal principal
   };
 
   return (
@@ -108,12 +153,10 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 resize: 'none',
               }}
             />
-            {/* Componente de categorías */}
             <CategoriesModal
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
             />
-            {/* Área que muestra las categorías seleccionadas */}
             <input
               type="text"
               readOnly
@@ -121,9 +164,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               placeholder="Categorías seleccionadas"
               style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
             />
-            {/* Componente de etiquetas */}
             <TagsModal selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
-            {/* Área que muestra las etiquetas seleccionadas */}
             <input
               type="text"
               readOnly
@@ -144,7 +185,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               ))}
             </select>
             <button
-              onClick={handleAddNote}
+              onClick={handleSave}
               style={{
                 backgroundColor: '#4caf50',
                 color: 'white',
@@ -172,6 +213,13 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
             >
               Cancelar
             </button>
+            {/* Modal de confirmación */}
+            {isConfirmModalOpen && (
+              <ConfirmationModal
+                onConfirm={handleConfirmSave}
+                onCancel={() => setIsConfirmModalOpen(false)}
+              />
+            )}
           </ModalContent>
         </ModalOverlay>
       )}

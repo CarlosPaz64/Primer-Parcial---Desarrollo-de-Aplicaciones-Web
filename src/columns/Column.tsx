@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { Note } from '../context-reducer/KanbanContext';
-import NoteCard from '../draggable/NoteCard';
+import CollapsedNotes from './CollapsedNotes'; // Importa correctamente
+import ExpandedNotes from './ExpandedNotes'; // Importa correctamente
 
 interface ColumnProps {
   column: {
@@ -18,11 +19,8 @@ interface ColumnProps {
 const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => {
   const [expanded, setExpanded] = useState(false);
 
-  // Limita la visualización de las notas a un máximo de 5
-  const displayedNotes = expanded ? column.notes : column.notes.slice(0, 5);
-
   return (
-    <div style={{ position: 'relative', zIndex: 0, marginBottom: '20px', cursor: 'pointer' }}>
+    <div style={{ position: 'relative', zIndex: 0, marginBottom: '20px' }}>
       <Droppable droppableId={column.id} type="note">
         {(provided) => (
           <div
@@ -34,32 +32,27 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
               position: 'relative',
               zIndex: 0,
               overflow: 'visible',
-              background: 'transparent', // Fondo transparente
+              background: 'transparent',
             }}
           >
-            {displayedNotes.map((note, noteIndex) => (
-              <div
-                key={note.id}
-                style={{
-                  position: 'relative',
-                  top: `${noteIndex * 5}px`, // Simula superposición con pequeños desplazamientos
-                  left: `${noteIndex * 2}px`,
-                  zIndex: 5 - noteIndex,
-                }}
-                onClick={() => setExpanded(!expanded)} // Expande o colapsa la vista de las notas al hacer clic
-              >
-                <NoteCard
-                  note={note}
-                  index={noteIndex}
-                  onEditNote={onEditNote}
-                  onDeleteNote={onDeleteNote}
-                  columnId={column.id}
-                />
-              </div>
-            ))}
+            {!expanded ? (
+              <CollapsedNotes
+                column={column}
+                onExpand={() => setExpanded(true)}
+                onEditNote={onEditNote}
+                onDeleteNote={onDeleteNote}
+              />
+            ) : (
+              <ExpandedNotes
+                column={column}
+                onCollapse={() => setExpanded(false)}
+                onEditNote={onEditNote}
+                onDeleteNote={onDeleteNote}
+              />
+            )}
             {provided.placeholder}
 
-            {/* Título de la columna y botón de eliminar */}
+            {/* Título de la columna */}
             <div
               style={{
                 display: 'flex',

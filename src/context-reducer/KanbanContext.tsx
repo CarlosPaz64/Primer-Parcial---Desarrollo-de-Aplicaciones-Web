@@ -39,6 +39,46 @@ const initialState: KanbanState = {
           content: 'This is a description of the note.', // Descripción del contenido
           tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
         },
+        {
+          id: 'note2',
+          author: 'Author 1',
+          title: 'Note Title 2', // Ejemplo de título
+          category: 'General',
+          content: 'This is a description of the note.', // Descripción del contenido
+          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+        },
+        {
+          id: 'note3',
+          author: 'Author 1',
+          title: 'Note Title 3', // Ejemplo de título
+          category: 'General',
+          content: 'This is a description of the note.', // Descripción del contenido
+          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+        },
+        {
+          id: 'note4',
+          author: 'Author 1',
+          title: 'Note Title 4', // Ejemplo de título
+          category: 'General',
+          content: 'This is a description of the note.', // Descripción del contenido
+          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+        },
+        {
+          id: 'note5',
+          author: 'Author 1',
+          title: 'Note Title 5', // Ejemplo de título
+          category: 'General',
+          content: 'This is a description of the note.', // Descripción del contenido
+          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+        },
+        {
+          id: 'note6',
+          author: 'Author 1',
+          title: 'Note Title 6', // Ejemplo de título
+          category: 'General',
+          content: 'This is a description of the note.', // Descripción del contenido
+          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+        },
       ],
     },
     { id: 'column2', title: 'Animals', notes: [] },

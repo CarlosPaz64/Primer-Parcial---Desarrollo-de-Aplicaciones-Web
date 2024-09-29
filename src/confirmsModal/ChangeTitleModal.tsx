@@ -1,9 +1,8 @@
-// ChangeTitleModal.tsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Reutiliza los mismos estilos y variantes de animación
+// Estilos y variantes de animación del modal principal
 const ModalOverlay = styled(motion.div)`
   position: fixed;
   top: 0;
@@ -38,6 +37,67 @@ const modalContentVariants = {
   exit: { y: '-100vh', transition: { ease: 'easeInOut' } },
 };
 
+// Componente del modal de confirmación
+const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void }> = ({
+  onConfirm,
+  onCancel,
+}) => (
+  <ModalOverlay initial="initial" animate="animate" exit="exit" variants={modalOverlayVariants}>
+    <ModalContent initial="initial" animate="animate" exit="exit" variants={modalContentVariants}>
+      <h4>¿Estás seguro de que quieres cambiar el nombre?</h4>
+      <button
+        onClick={onConfirm}
+        style={{
+          backgroundColor: '#F5B971',
+          color: 'white',
+          padding: '10px',
+          border: 'none',
+          borderRadius: '5px',
+          marginRight: '10px',
+          cursor: 'pointer',
+        }}
+      >
+        Confirmar
+      </button>
+      <button
+        onClick={onCancel}
+        style={{
+          backgroundColor: '#F5B971',
+          color: 'white',
+          padding: '10px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        Cancelar
+      </button>
+    </ModalContent>
+  </ModalOverlay>
+);
+
+// Componente del modal de advertencia
+const WarningModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
+  <ModalOverlay initial="initial" animate="animate" exit="exit" variants={modalOverlayVariants}>
+    <ModalContent initial="initial" animate="animate" exit="exit" variants={modalContentVariants}>
+      <h4>El título no puede estar vacío.</h4>
+      <button
+        onClick={onClose}
+        style={{
+          backgroundColor: '#f44336',
+          color: 'white',
+          padding: '10px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        Aceptar
+      </button>
+    </ModalContent>
+  </ModalOverlay>
+);
+
 interface ChangeTitleModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -46,35 +106,99 @@ interface ChangeTitleModalProps {
 
 const ChangeTitleModal: React.FC<ChangeTitleModalProps> = ({ isOpen, onClose, onConfirm }) => {
   const [newTitle, setNewTitle] = useState('');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false); // Estado para el modal de advertencia
 
-  if (!isOpen) return null;
+  const handleConfirmChange = () => {
+    if (!newTitle.trim()) {
+      setIsWarningModalOpen(true); // Abre el modal de advertencia si no hay título
+    } else {
+      setIsConfirmModalOpen(true); // Abre el modal de confirmación si hay título
+    }
+  };
+
+  const handleFinalConfirm = () => {
+    onConfirm(newTitle);
+    setIsConfirmModalOpen(false);
+    onClose();
+  };
 
   return (
-    <ModalOverlay
-      variants={modalOverlayVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      onClick={onClose}
-    >
-      <ModalContent
-        variants={modalContentVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2>Cambiar Título</h2>
-        <input
-          type="text"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-          placeholder="Nuevo título"
-        />
-        <button onClick={() => onConfirm(newTitle)}>Cambiar Nombre</button>
-        <button onClick={onClose}>Cancelar</button>
-      </ModalContent>
-    </ModalOverlay>
+    <AnimatePresence>
+      {isOpen && (
+        <ModalOverlay
+          variants={modalOverlayVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          onClick={onClose}
+        >
+          <ModalContent
+            variants={modalContentVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2>Cambiar Título</h2>
+            <input
+              type="text"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="Nuevo título"
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                padding: '8px',
+                borderRadius: '5px',
+              }}
+            />
+            <button
+              onClick={handleConfirmChange}
+              style={{
+                backgroundColor: '#4caf50',
+                color: 'white',
+                padding: '10px',
+                border: 'none',
+                borderRadius: '5px',
+                width: '100%',
+                marginBottom: '10px',
+                cursor: 'pointer',
+              }}
+            >
+              Cambiar Nombre
+            </button>
+            <button
+              onClick={onClose}
+              style={{
+                backgroundColor: '#f44336',
+                color: 'white',
+                padding: '10px',
+                border: 'none',
+                borderRadius: '5px',
+                width: '100%',
+                cursor: 'pointer',
+              }}
+            >
+              Cancelar
+            </button>
+
+            {/* Modal de confirmación */}
+            {isConfirmModalOpen && (
+              <ConfirmationModal
+                onConfirm={handleFinalConfirm}
+                onCancel={() => setIsConfirmModalOpen(false)}
+              />
+            )}
+
+            {/* Modal de advertencia */}
+            {isWarningModalOpen && (
+              <WarningModal onClose={() => setIsWarningModalOpen(false)} />
+            )}
+          </ModalContent>
+        </ModalOverlay>
+      )}
+    </AnimatePresence>
   );
 };
 

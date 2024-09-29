@@ -68,7 +68,7 @@ const AddColumn: React.FC = () => {
             padding: '8px 12px',
             borderRadius: '4px',
             border: 'none',
-            backgroundColor: '#4caf50',
+            backgroundColor: '#70AF85',
             color: 'white',
             cursor: 'pointer',
           }}

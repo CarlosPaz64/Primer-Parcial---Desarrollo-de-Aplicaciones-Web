@@ -7,7 +7,6 @@ import EditableInput from './inputs/EditableInput';
 import AddColumn from './columns/AddColumn';
 import CreateNoteModal from './modal/CreateNoteModal';
 import EditNoteModal from './modal/EditNoteModal';
-import NoteCard from './draggable/NoteCard';
 import { v4 as uuidv4 } from 'uuid';
 import AppBar from './appBar/AppBar';
 import AddIcon from '@mui/icons-material/Add';
@@ -195,7 +194,7 @@ const Kanban: React.FC = () => {
                           <button
                             onClick={() => openDeleteColumnModal(column.id)}
                             style={{
-                              background: '#e74c3c',
+                              background: '#FF7878',
                               color: '#fff',
                               border: 'none',
                               borderRadius: '50%',
@@ -219,40 +218,6 @@ const Kanban: React.FC = () => {
             )}
           </Droppable>
         </div>
-
-        <Droppable droppableId="dead-zone" type="note">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={{
-                padding: '20px',
-                border: '2px dashed #ccc',
-                display: 'flex',
-                minHeight: '150px',
-                backgroundColor: '#f9f9f9',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                gap: '10px',
-                zIndex: 0,
-              }}
-            >
-              <h3>Note's dead zone</h3>
-              {state.looseNotes.map((note, index) => (
-                <NoteCard
-                  key={note.id}
-                  note={note}
-                  index={index}
-                  onEditNote={handleEditNote}
-                  onDeleteNote={(noteId) => openDeleteNoteModal(noteId, 'looseNotes')}
-                  columnId="looseNotes"
-                />
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
       </DragDropContext>
 
       <Tooltip title="Crear nueva nota">
@@ -262,8 +227,8 @@ const Kanban: React.FC = () => {
           position: 'absolute',
           top: '135px',
           right: '10px',
-          backgroundColor: '#c1e1c1',
-          color: '#333',
+          backgroundColor: '#70AF85',
+          color: 'white',
           padding: '10px 15px',
           border: 'none',
           borderRadius: '10%',
