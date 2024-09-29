@@ -1,4 +1,7 @@
 /* styles.css */
+*{
+  font-family: 'Noto Sans', sans-serif;
+}
 
 /* Estilo general del cuerpo y de los encabezados */
 body {
