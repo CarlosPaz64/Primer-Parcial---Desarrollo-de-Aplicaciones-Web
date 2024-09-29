@@ -12,6 +12,7 @@ import AppBar from './appBar/AppBar';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
+import DragPortal from './DragPortal'; // Importa DragPortal
 
 // Importar los nuevos modales
 import DeleteColumnModal from './confirmsModal/DeleteColumnModal';
@@ -168,7 +169,7 @@ const Kanban: React.FC = () => {
           style={{
             display: 'flex',
             zIndex: '0',
-            overflowX: 'hidden',
+            overflowX: 'auto',
             position: 'relative',
             padding: '10px 0',
             whiteSpace: 'nowrap',
@@ -187,49 +188,58 @@ const Kanban: React.FC = () => {
               >
                 {state.columns.map((column, index) => (
                   <Draggable key={column.id} draggableId={column.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="paper"
-                        style={{
-                          ...provided.draggableProps.style,
-                          zIndex: snapshot.isDragging ? 1000 : 'auto',
-                          whiteSpace: 'normal',
-                        }}
-                      >
-                        <EditableInput
-                          initialValue={column.title}
-                          onConfirm={() => openChangeTitleModal(column.id)} // Abre el modal para cambiar el título
-                        />
-                        <Column
-                          column={column}
-                          index={index}
-                          onDeleteNote={openDeleteNoteModal}
-                          onEditNote={handleEditNote}
-                        />
-                        <Tooltip title="Eliminar columna">
-                          <button
-                            onClick={() => openDeleteColumnModal(column.id)}
-                            style={{
-                              background: '#FF7878',
-                              color: '#fff',
-                              border: 'none',
-                              borderRadius: '50%',
-                              padding: '8px',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              marginTop: '10px',
-                            }}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </button>
-                        </Tooltip>
-                      </div>
-                    )}
+                    {(provided, snapshot) => {
+                      const content = (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="paper"
+                          style={{
+                            ...provided.draggableProps.style,
+                            zIndex: snapshot.isDragging ? 1000 : 'auto',
+                            whiteSpace: 'normal',
+                          }}
+                        >
+                          <EditableInput
+                            initialValue={column.title}
+                            onConfirm={() => openChangeTitleModal(column.id)} // Abre el modal para cambiar el título
+                          />
+                          <Column
+                            column={column}
+                            index={index}
+                            onDeleteNote={openDeleteNoteModal}
+                            onEditNote={handleEditNote}
+                          />
+                          <Tooltip title="Eliminar columna">
+                            <button
+                              onClick={() => openDeleteColumnModal(column.id)}
+                              style={{
+                                background: '#FF7878',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '50%',
+                                padding: '8px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginTop: '10px',
+                              }}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </button>
+                          </Tooltip>
+                        </div>
+                      );
+                      return snapshot.isDragging ? (
+                        <DragPortal isDragging={snapshot.isDragging}>
+                          {content}
+                        </DragPortal>
+                      ) : (
+                        content
+                      );
+                    }}
                   </Draggable>
                 ))}
                 {provided.placeholder}

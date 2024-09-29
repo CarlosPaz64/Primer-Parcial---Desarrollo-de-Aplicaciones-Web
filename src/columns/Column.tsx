@@ -53,19 +53,6 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
             )}
 
             {provided.placeholder}
-
-            {/* Título de la columna */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: '20px',
-                padding: '0 10px',
-              }}
-            >
-              <h3 style={{ fontWeight: '500' }}>{column.title}</h3>
-            </div>
           </div>
         )}
       </Droppable>
