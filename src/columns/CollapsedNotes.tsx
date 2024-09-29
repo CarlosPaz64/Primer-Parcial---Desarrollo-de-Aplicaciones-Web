@@ -41,7 +41,6 @@ const CollapsedNotes: React.FC<CollapsedNotesProps> = ({
                 minHeight: '100px',
                 width: '200px',
                 margin: '0 auto',
-                border: '1px dashed lightgray',
                 boxSizing: 'border-box',
                 position: 'relative', // Cambia a 'relative' durante el arrastre
                 zIndex: snapshot.isDragging ? 9999 : 'auto',
