@@ -53,7 +53,6 @@ const CollapsedNotes: React.FC<CollapsedNotesProps> = ({
                 top: `${noteIndex * 10}px`, // Desplazamiento gradual hacia abajo
                 left: `${noteIndex * 5}px`, // Desplazamiento gradual hacia la derecha
                 zIndex: 5 - noteIndex,
-                transition: 'transform 0.3s', // Transición suave si se necesita
               }}
             >
               <NoteCard
