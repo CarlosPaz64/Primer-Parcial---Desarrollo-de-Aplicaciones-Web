@@ -31,6 +31,7 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
               position: 'relative',
               zIndex: 0,
               background: 'transparent',
+              left: '50px',
               borderRadius: '8px',
               margin: '0 15px',
               boxSizing: 'border-box',

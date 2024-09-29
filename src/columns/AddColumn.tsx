@@ -69,7 +69,7 @@ const AddColumn: React.FC = () => {
             borderRadius: '4px',
             border: 'none',
             backgroundColor: '#70AF85',
-            color: 'white',
+            color: '#000',
             cursor: 'pointer',
           }}
         >

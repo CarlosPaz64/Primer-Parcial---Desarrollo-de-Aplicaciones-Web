@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import CategoriesModal from './CategoriesModal';
 import TagsModal from './TagsModal';
 import WarningModal from '../confirmsModal/WarningModal';
-
 
 // Estilos del modal principal
 const ModalOverlay = styled(motion.div)`
@@ -18,6 +17,7 @@ const ModalOverlay = styled(motion.div)`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  pointer-events: all; /* Asegura que se capten todas las interacciones en el modal */
 `;
 
 const ModalContent = styled(motion.div)`
@@ -27,6 +27,7 @@ const ModalContent = styled(motion.div)`
   width: 500px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
+  z-index: 1100; /* Asegura que esté sobre el overlay */
 `;
 
 const modalOverlayVariants = {
@@ -102,6 +103,17 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false); // Estado para abrir/cerrar el WarningModal
   const [warningMessage, setWarningMessage] = useState(''); // Mensaje para el WarningModal
 
+  // Bloquear el scroll cuando el modal está abierto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const handleSave = () => {
     setIsConfirmModalOpen(true); // Abre el modal de confirmación
@@ -122,7 +134,6 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     setIsConfirmModalOpen(false); // Cierra el modal de confirmación
     onClose(); // Cierra el modal principal
   };
-  
 
   return (
     <AnimatePresence>
@@ -229,13 +240,12 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
             )}
             {/* Modal de advertencia */}
             {isWarningModalOpen && (
-              <WarningModal 
-                isOpen={isWarningModalOpen} 
-                onClose={() => setIsWarningModalOpen(false)} 
-                message={warningMessage} 
+              <WarningModal
+                isOpen={isWarningModalOpen}
+                onClose={() => setIsWarningModalOpen(false)}
+                message={warningMessage}
               />
             )}
-
           </ModalContent>
         </ModalOverlay>
       )}

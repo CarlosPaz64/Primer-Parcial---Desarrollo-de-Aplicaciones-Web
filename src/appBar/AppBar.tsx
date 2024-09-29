@@ -9,7 +9,7 @@ const AppBar: React.FC = () => {
         padding: '20px',
         borderRadius: '8px', // Bordes redondeados
         textAlign: 'center',
-        marginBottom: '20px',
+        margin: '0px',
       }}
     >
       <h1 style={{ fontWeight: 'bold', margin: 0 }}>Aplicación de notas</h1>

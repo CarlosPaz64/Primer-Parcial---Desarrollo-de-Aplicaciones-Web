@@ -14,9 +14,9 @@ const EditableInput: React.FC<EditableInputProps> = ({ initialValue, onConfirm }
         <button
           onClick={onConfirm}
           style={{
-            background: '#295F98',
+            background: '#D2E0FB',
             border: 'none',
-            color: '#D2E0FB',
+            color: '#000',
             textDecoration: 'none',
             cursor: 'pointer',
             padding: '5px',

@@ -250,31 +250,31 @@ const Kanban: React.FC = () => {
       </DragDropContext>
 
       <Tooltip title="Crear nueva nota">
-      <button
-        onClick={() => setIsCreateModalOpen(true)}
-        style={{
-          position: 'absolute',
-          top: '135px',
-          right: '10px',
-          backgroundColor: '#70AF85',
-          color: 'white',
-          padding: '10px 15px',
-          border: 'none',
-          borderRadius: '10%',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
-          transition: 'background-color 0.3s, transform 0.2s',
-        }}
-        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#a8dadc')}
-        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#70AF85')}
-      >
-        <AddIcon style={{ fontSize: '20px', marginRight: '5px' }} />
-        Create note
-      </button>
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          style={{
+            position: 'fixed', // Para mantenerlo debajo del AppBar
+            top: 'calc(64px + 50px)', // Ajustando a la altura del AppBar más un margen de 20px
+            right: '20px', // Margen simétrico de 20px por el lado derecho
+            backgroundColor: '#70AF85',
+            color: '#000',
+            width: '50px', // Anchura para mantener el botón redondeado
+            height: '50px', // Altura para mantener el botón redondeado
+            border: 'none',
+            borderRadius: '50%', // Forma completamente redondeada
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center', // Centra el ícono verticalmente
+            justifyContent: 'center', // Centra el ícono horizontalmente
+            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
+            transition: 'background-color 0.3s, transform 0.2s',
+          }}
+        >
+          <AddIcon style={{ fontSize: '24px' }} /> {/* Ajusta el tamaño del ícono */}
+        </button>
       </Tooltip>
+
+
 
       <CreateNoteModal
         isOpen={isCreateModalOpen}
