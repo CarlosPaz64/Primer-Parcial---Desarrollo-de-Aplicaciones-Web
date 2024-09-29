@@ -62,7 +62,7 @@ const LimitReachedModal: React.FC<LimitReachedModalProps> = ({ isOpen, onClose }
         onClick={(e) => e.stopPropagation()}
       >
         <h2>Límite Alcanzado</h2>
-        <p>Solo se pueden crear 5 columnas. Por favor, elimina una o edita una existente.</p>
+        <p>Solo se pueden crear 8 espacios. Por favor, elimina o edita un espacio.</p>
         <button onClick={onClose}>OK</button>
       </ModalContent>
     </ModalOverlay>

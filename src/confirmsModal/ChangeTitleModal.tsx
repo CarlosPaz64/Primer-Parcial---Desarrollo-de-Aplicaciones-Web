@@ -62,7 +62,7 @@ const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void 
       <button
         onClick={onCancel}
         style={{
-          backgroundColor: '#F5B971',
+          backgroundColor: '#C96868',
           color: 'white',
           padding: '10px',
           border: 'none',
@@ -84,7 +84,7 @@ const WarningModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
       <button
         onClick={onClose}
         style={{
-          backgroundColor: '#f44336',
+          backgroundColor: '#C96868',
           color: 'white',
           padding: '10px',
           border: 'none',
@@ -156,7 +156,7 @@ const ChangeTitleModal: React.FC<ChangeTitleModalProps> = ({ isOpen, onClose, on
             <button
               onClick={handleConfirmChange}
               style={{
-                backgroundColor: '#4caf50',
+                backgroundColor: '#86AB89',
                 color: 'white',
                 padding: '10px',
                 border: 'none',
@@ -171,7 +171,7 @@ const ChangeTitleModal: React.FC<ChangeTitleModalProps> = ({ isOpen, onClose, on
             <button
               onClick={onClose}
               style={{
-                backgroundColor: '#f44336',
+                backgroundColor: '#C96868',
                 color: 'white',
                 padding: '10px',
                 border: 'none',

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import CategoriesModal from './CategoriesModal';
 import TagsModal from './TagsModal';
+import WarningModal from '../confirmsModal/WarningModal';
+
 
 // Estilos del modal principal
 const ModalOverlay = styled(motion.div)`
@@ -97,6 +99,9 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedColumn, setSelectedColumn] = useState('');
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // Estado para el modal de confirmación
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false); // Estado para abrir/cerrar el WarningModal
+  const [warningMessage, setWarningMessage] = useState(''); // Mensaje para el WarningModal
+
 
   const handleSave = () => {
     setIsConfirmModalOpen(true); // Abre el modal de confirmación
@@ -104,7 +109,8 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
 
   const handleConfirmSave = () => {
     if (!selectedColumn) {
-      alert('Por favor, selecciona una columna antes de agregar una nota.');
+      setWarningMessage('Por favor, selecciona una columna antes de agregar una nota.');
+      setIsWarningModalOpen(true); // Abre el WarningModal si no hay columna seleccionada
       return;
     }
     onAddNote(content, selectedColumn);
@@ -116,6 +122,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
     setIsConfirmModalOpen(false); // Cierra el modal de confirmación
     onClose(); // Cierra el modal principal
   };
+  
 
   return (
     <AnimatePresence>
@@ -220,6 +227,15 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 onCancel={() => setIsConfirmModalOpen(false)}
               />
             )}
+            {/* Modal de advertencia */}
+            {isWarningModalOpen && (
+              <WarningModal 
+                isOpen={isWarningModalOpen} 
+                onClose={() => setIsWarningModalOpen(false)} 
+                message={warningMessage} 
+              />
+            )}
+
           </ModalContent>
         </ModalOverlay>
       )}

@@ -257,7 +257,7 @@ const Kanban: React.FC = () => {
           transition: 'background-color 0.3s, transform 0.2s',
         }}
         onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#a8dadc')}
-        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#c1e1c1')}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#70AF85')}
       >
         <AddIcon style={{ fontSize: '20px', marginRight: '5px' }} />
         Create note

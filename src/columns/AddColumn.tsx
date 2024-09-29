@@ -26,8 +26,8 @@ const AddColumn: React.FC = () => {
   };
 
   const handleConfirmAddColumn = () => {
-    // Verificar si ya existen 5 columnas
-    if (state.columns.length >= 5) {
+    // Verificar si ya existen 8 columnas
+    if (state.columns.length >= 8) {
       setIsLimitReachedModalOpen(true); // Mostrar modal de límite alcanzado
       setIsConfirmModalOpen(false);
       return;
@@ -51,7 +51,7 @@ const AddColumn: React.FC = () => {
         type="text"
         value={newColumnTitle}
         onChange={(e) => setNewColumnTitle(e.target.value)}
-        placeholder="Enter column title"
+        placeholder="Añade el título de tu espacio"
         style={{
           padding: '8px',
           borderRadius: '4px',
@@ -61,7 +61,7 @@ const AddColumn: React.FC = () => {
           boxSizing: 'border-box',
         }}
       />
-      <Tooltip title="Agregar nueva columna">
+      <Tooltip title="Agregar un nuevo espacio">
         <button
           onClick={handleAddColumnClick}
           style={{
@@ -73,7 +73,7 @@ const AddColumn: React.FC = () => {
             cursor: 'pointer',
           }}
         >
-          Add Column
+          Add new space
         </button>
       </Tooltip>
 
@@ -82,14 +82,14 @@ const AddColumn: React.FC = () => {
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={handleConfirmAddColumn}
-        message="¿Estás seguro de que quieres añadir esta columna?"
+        message="¿Estás seguro de que quieres añadir este espacio?"
       />
 
       {/* Modal de advertencia */}
       <WarningModal
         isOpen={isWarningModalOpen}
         onClose={() => setIsWarningModalOpen(false)}
-        message="No puedes crear columnas sin nombre."
+        message="No puedes crear espacios sin nombre."
       />
 
       {/* Modal de límite alcanzado */}
