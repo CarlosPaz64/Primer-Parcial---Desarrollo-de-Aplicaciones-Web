@@ -84,7 +84,13 @@ const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void 
 interface CreateNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddNote: (content: string, columnId: string) => void;
+  onAddNote: (
+    title: string,
+    content: string,
+    selectedCategories: string[],
+    selectedTags: string[],
+    columnId: string
+  ) => void;
   columns: { id: string; title: string }[];
 }
 
@@ -116,16 +122,19 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   }, [isOpen]);
 
   const handleSave = () => {
+    if (!selectedColumn) {
+      // Si no se ha seleccionado una columna, muestra el mensaje de advertencia
+      setWarningMessage('Por favor, selecciona una columna antes de agregar una nota.');
+      setIsWarningModalOpen(true);
+      return;
+    }
     setIsConfirmModalOpen(true); // Abre el modal de confirmación
   };
 
   const handleConfirmSave = () => {
-    if (!selectedColumn) {
-      setWarningMessage('Por favor, selecciona una columna antes de agregar una nota.');
-      setIsWarningModalOpen(true); // Abre el WarningModal si no hay columna seleccionada
-      return;
-    }
-    onAddNote(content, selectedColumn);
+    onAddNote(title, content, selectedCategories, selectedTags, selectedColumn);
+
+    // Limpiar los estados después de guardar
     setTitle('');
     setContent('');
     setSelectedCategories([]);

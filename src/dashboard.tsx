@@ -1,4 +1,3 @@
-// Kanban.tsx
 import React, { useContext, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { KanbanContext, Note } from './context-reducer/KanbanContext';
@@ -12,9 +11,8 @@ import AppBar from './appBar/AppBar';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
-import DragPortal from './DragPortal'; // Importa DragPortal
+import DragPortal from './DragPortal'; 
 
-// Importar los nuevos modales
 import DeleteColumnModal from './confirmsModal/DeleteColumnModal';
 import DeleteNoteModal from './confirmsModal/DeleteNoteModal';
 import ChangeTitleModal from './confirmsModal/ChangeTitleModal';
@@ -29,22 +27,21 @@ const Kanban: React.FC = () => {
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
   const [selectedNote, setSelectedNote] = useState<{ noteId: string; columnId: string } | null>(null);
+  
+  // Estado de expansión de las columnas
+  const [expandedColumns, setExpandedColumns] = useState<{ [key: string]: boolean }>({});
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, type, draggableId } = result;
-  
-    // Verifica si no hay destino
+
     if (!destination) return;
-  
-    // Mover columnas
+
     if (type === 'column') {
       dispatch({ type: 'MOVE_COLUMN', sourceIndex: source.index, destIndex: destination.index });
-    } 
-    // Mover conjunto de notas colapsadas entre columnas
-    else if (draggableId.startsWith('collapsed-')) {
+    } else if (draggableId.startsWith('collapsed-')) {
       const sourceColumnId = source.droppableId;
       const destColumnId = destination.droppableId;
-  
+
       if (sourceColumnId !== destColumnId) {
         dispatch({
           type: 'MOVE_COLLAPSED_NOTES',
@@ -52,12 +49,10 @@ const Kanban: React.FC = () => {
           destColumnId,
         });
       }
-    } 
-    // Mover notas individuales
-    else {
+    } else {
       const sourceId = source.droppableId === 'dead-zone' ? 'looseNotes' : source.droppableId;
       const destId = destination.droppableId === 'dead-zone' ? 'looseNotes' : destination.droppableId;
-  
+
       if (sourceId && destId) {
         dispatch({
           type: 'MOVE_NOTE',
@@ -68,20 +63,27 @@ const Kanban: React.FC = () => {
         });
       }
     }
-  };  
+  };
 
-  const handleAddNote = (content: string, columnId: string) => {
+  const handleAddNote = (
+    title: string, 
+    content: string, 
+    selectedCategories: string[], 
+    selectedTags: string[], 
+    columnId: string
+  ) => {
     const newNote: Note = {
       id: uuidv4(),
       author: 'Author',
-      category: columnId,
-      content: content,
-      title: 'New Note',
-      tags: [],
+      title: title || 'Título por defecto', // Título por defecto si no se proporciona
+      category: selectedCategories.length > 0 ? selectedCategories.join(', ') : 'Sin categoría', // Valor por defecto si no hay categorías
+      content: content || 'Contenido random', // Valor por defecto si no hay contenido
+      tags: selectedTags.length > 0 ? selectedTags : ['Sin etiquetas'], // Valor por defecto si no hay etiquetas
     };
-
+  
     dispatch({ type: 'ADD_NOTE', columnId, note: newNote });
   };
+  
 
   const handleEditNote = (note: Note) => {
     setCurrentNote(note);
@@ -114,7 +116,14 @@ const Kanban: React.FC = () => {
     }
   };
 
-  // Handlers modificados para abrir los modales de confirmación
+  // Handler para controlar la expansión de columnas
+  const toggleColumnExpansion = (columnId: string) => {
+    setExpandedColumns(prevState => ({
+      ...prevState,
+      [columnId]: !prevState[columnId],
+    }));
+  };
+
   const openDeleteColumnModal = (columnId: string) => {
     setSelectedColumnId(columnId);
     setIsDeleteColumnModalOpen(true);
@@ -203,11 +212,13 @@ const Kanban: React.FC = () => {
                         >
                           <EditableInput
                             initialValue={column.title}
-                            onConfirm={() => openChangeTitleModal(column.id)} // Abre el modal para cambiar el título
+                            onConfirm={() => openChangeTitleModal(column.id)}
                           />
                           <Column
                             column={column}
                             index={index}
+                            expanded={expandedColumns[column.id] || false} // Controla si la columna está expandida o colapsada
+                            onToggleExpand={() => toggleColumnExpansion(column.id)} // Controla el cambio de estado de expansión
                             onDeleteNote={openDeleteNoteModal}
                             onEditNote={handleEditNote}
                           />
@@ -253,28 +264,26 @@ const Kanban: React.FC = () => {
         <button
           onClick={() => setIsCreateModalOpen(true)}
           style={{
-            position: 'fixed', // Para mantenerlo debajo del AppBar
-            top: 'calc(64px + 50px)', // Ajustando a la altura del AppBar más un margen de 20px
-            right: '20px', // Margen simétrico de 20px por el lado derecho
+            position: 'fixed',
+            top: 'calc(64px + 50px)',
+            right: '20px',
             backgroundColor: '#70AF85',
             color: '#000',
-            width: '50px', // Anchura para mantener el botón redondeado
-            height: '50px', // Altura para mantener el botón redondeado
+            width: '50px',
+            height: '50px',
             border: 'none',
-            borderRadius: '50%', // Forma completamente redondeada
+            borderRadius: '50%',
             cursor: 'pointer',
             display: 'flex',
-            alignItems: 'center', // Centra el ícono verticalmente
-            justifyContent: 'center', // Centra el ícono horizontalmente
+            alignItems: 'center',
+            justifyContent: 'center',
             boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
             transition: 'background-color 0.3s, transform 0.2s',
           }}
         >
-          <AddIcon style={{ fontSize: '24px' }} /> {/* Ajusta el tamaño del ícono */}
+          <AddIcon style={{ fontSize: '24px' }} />
         </button>
       </Tooltip>
-
-
 
       <CreateNoteModal
         isOpen={isCreateModalOpen}
@@ -292,7 +301,6 @@ const Kanban: React.FC = () => {
         />
       )}
 
-      {/* Renderiza los nuevos modales */}
       <DeleteColumnModal
         isOpen={isDeleteColumnModalOpen}
         onClose={() => setIsDeleteColumnModalOpen(false)}

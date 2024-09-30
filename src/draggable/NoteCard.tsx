@@ -65,7 +65,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
           textOverflow: 'ellipsis',
         }}
       >
-        {note.content}
+        {note.content || 'Sin contenido'} {/* Valor por defecto para el contenido */}
       </p>
 
       {/* Categoría y Etiquetas con espacios reservados */}
@@ -118,6 +118,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
           zIndex: 1,
           position: 'relative',
           maxWidth: '150px',
+          minHeight: '150px', // Tamaño mínimo para la nota
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -201,6 +202,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
             zIndex: snapshot.isDragging ? 1000 : 1,
             position: snapshot.isDragging ? 'fixed' : 'relative',
             maxWidth: '150px',
+            minHeight: '150px', // Tamaño mínimo para la nota
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',

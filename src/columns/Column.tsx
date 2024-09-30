@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { Note } from '../context-reducer/KanbanContext';
-import CollapsedNotes from './CollapsedNotes'; // Importa correctamente
-import ExpandedNotes from './ExpandedNotes'; // Importa correctamente
+import CollapsedNotes from './CollapsedNotes'; 
+import ExpandedNotes from './ExpandedNotes'; 
 
 interface ColumnProps {
   column: {
@@ -11,13 +11,13 @@ interface ColumnProps {
     notes: Note[];
   };
   index: number;
+  expanded: boolean;
+  onToggleExpand: () => void;
   onDeleteNote: (noteId: string, columnId: string) => void;
   onEditNote: (note: Note) => void;
 }
 
-const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => {
-  const [expanded, setExpanded] = useState(false);
-
+const Column: React.FC<ColumnProps> = ({ column, expanded, onToggleExpand, onDeleteNote, onEditNote }) => {
   return (
     <div style={{ position: 'relative', zIndex: 0, marginBottom: '20px' }}>
       <Droppable droppableId={column.id} type="note">
@@ -26,7 +26,7 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
             {...provided.droppableProps}
             ref={provided.innerRef}
             style={{
-              minHeight: '150px', // Aumentamos el espacio mínimo para evitar colisiones
+              minHeight: '150px',
               padding: '10px',
               position: 'relative',
               zIndex: 0,
@@ -40,19 +40,18 @@ const Column: React.FC<ColumnProps> = ({ column, onDeleteNote, onEditNote }) => 
             {!expanded ? (
               <CollapsedNotes
                 column={column}
-                onExpand={() => setExpanded(true)}
+                onExpand={onToggleExpand}
                 onEditNote={onEditNote}
                 onDeleteNote={onDeleteNote}
               />
             ) : (
               <ExpandedNotes
                 column={column}
-                onCollapse={() => setExpanded(false)}
+                onCollapse={onToggleExpand}
                 onEditNote={onEditNote}
                 onDeleteNote={onDeleteNote}
               />
             )}
-
             {provided.placeholder}
           </div>
         )}
