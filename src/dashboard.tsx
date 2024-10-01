@@ -167,7 +167,42 @@ const Kanban: React.FC = () => {
       }}
     >
       <AppBar />
+          {/* Contenedor principal para el input y el botón */}
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between', // Separa el input y el botón
+        alignItems: 'center',
+        padding: '10px 0', // Añade algo de espacio vertical
+      }}
+    >
+      {/* Input para agregar columna */}
       <AddColumn />
+
+      {/* Botón para crear nueva nota, alineado a la derecha */}
+      <Tooltip title="Crear nueva nota">
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          style={{
+            backgroundColor: '#70AF85',
+            color: '#000',
+            width: '50px',
+            height: '50px',
+            marginTop: '-10px',
+            border: 'none',
+            borderRadius: '50%',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
+            transition: 'background-color 0.3s, transform 0.2s',
+          }}
+        >
+          <AddIcon style={{ fontSize: '24px' }} />
+        </button>
+      </Tooltip>
+    </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <div
           style={{
@@ -234,31 +269,6 @@ const Kanban: React.FC = () => {
           </Droppable>
         </div>
       </DragDropContext>
-
-      <Tooltip title="Crear nueva nota">
-        <button
-          onClick={() => setIsCreateModalOpen(true)}
-          style={{
-            position: 'fixed',
-            top: 'calc(64px + 50px)',
-            right: '20px',
-            backgroundColor: '#70AF85',
-            color: '#000',
-            width: '50px',
-            height: '50px',
-            border: 'none',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
-            transition: 'background-color 0.3s, transform 0.2s',
-          }}
-        >
-          <AddIcon style={{ fontSize: '24px' }} />
-        </button>
-      </Tooltip>
 
       <CreateNoteModal
         isOpen={isCreateModalOpen}
