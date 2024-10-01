@@ -57,7 +57,9 @@ const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void 
           cursor: 'pointer',
         }}
       >
-        Confirmar
+        <span className="material-symbols-outlined">
+        check_circle
+        </span>
       </button>
       <button
         onClick={onCancel}
@@ -70,7 +72,9 @@ const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void 
           cursor: 'pointer',
         }}
       >
-        Cancelar
+        <span className="material-symbols-outlined">
+        cancel
+        </span>
       </button>
     </ModalContent>
   </ModalOverlay>
@@ -84,15 +88,18 @@ const WarningModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
       <button
         onClick={onClose}
         style={{
-          backgroundColor: '#C96868',
-          color: 'white',
+          backgroundColor: '##ffeb3b',
+          transition: 'background-color 0.3s',
+          color: '#000',
           padding: '10px',
           border: 'none',
           borderRadius: '5px',
           cursor: 'pointer',
         }}
       >
-        Aceptar
+        <span className="material-symbols-outlined">
+        check_circle
+        </span>
       </button>
     </ModalContent>
   </ModalOverlay>

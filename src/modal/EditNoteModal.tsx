@@ -60,7 +60,9 @@ const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void 
           cursor: 'pointer',
         }}
       >
-        Confirmar
+        <span className="material-symbols-outlined">
+        check_circle
+        </span>
       </button>
       <button
         onClick={onCancel}
@@ -73,7 +75,9 @@ const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void 
           cursor: 'pointer',
         }}
       >
-        Cancelar
+        <span className="material-symbols-outlined">
+        cancel
+        </span>
       </button>
     </ModalContent>
   </ModalOverlay>
@@ -196,7 +200,9 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
                 cursor: 'pointer',
               }}
             >
-              Guardar Nota
+              <span className="material-symbols-outlined">
+              save
+              </span>
             </button>
             <button
               onClick={onClose}
@@ -210,7 +216,9 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
                 cursor: 'pointer',
               }}
             >
-              Cancelar
+              <span className="material-symbols-outlined">
+              cancel
+              </span>
             </button>
             {/* Modal de confirmación */}
             {isConfirmModalOpen && (

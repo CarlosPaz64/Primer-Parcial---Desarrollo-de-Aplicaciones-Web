@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { Note } from '../context-reducer/KanbanContext';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 
 const pastelColors = [
@@ -155,7 +153,9 @@ const NoteCard: React.FC<NoteCardProps> = ({
                   justifyContent: 'center',
                 }}
               >
-                <EditIcon fontSize="small" />
+                <span className="material-symbols-outlined">
+                  edit_note
+                  </span>
               </button>
             </Tooltip>
             <Tooltip title="Eliminar">
@@ -173,7 +173,9 @@ const NoteCard: React.FC<NoteCardProps> = ({
                   justifyContent: 'center',
                 }}
               >
-                <DeleteIcon fontSize="small" />
+                <span className="material-symbols-outlined">
+                  edit_note
+                  </span>
               </button>
             </Tooltip>
           </div>
@@ -239,7 +241,9 @@ const NoteCard: React.FC<NoteCardProps> = ({
                     justifyContent: 'center',
                   }}
                 >
-                  <EditIcon fontSize="small" />
+                  <span className="material-symbols-outlined">
+                  edit_note
+                  </span>
                 </button>
               </Tooltip>
               <Tooltip title="Eliminar">
@@ -257,7 +261,9 @@ const NoteCard: React.FC<NoteCardProps> = ({
                     justifyContent: 'center',
                   }}
                 >
-                  <DeleteIcon fontSize="small" />
+                  <span className="material-symbols-outlined">
+                  delete
+                  </span>
                 </button>
               </Tooltip>
             </div>

@@ -8,8 +8,6 @@ import CreateNoteModal from './modal/CreateNoteModal';
 import EditNoteModal from './modal/EditNoteModal';
 import { v4 as uuidv4 } from 'uuid';
 import AppBar from './appBar/AppBar';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteColumnModal from './confirmsModal/DeleteColumnModal';
 import DeleteNoteModal from './confirmsModal/DeleteNoteModal';
@@ -199,7 +197,9 @@ const Kanban: React.FC = () => {
             transition: 'background-color 0.3s, transform 0.2s',
           }}
         >
-          <AddIcon style={{ fontSize: '24px' }} />
+          <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>
+      add_notes
+    </span>
         </button>
       </Tooltip>
     </div>
@@ -252,7 +252,9 @@ const Kanban: React.FC = () => {
                       marginTop: '10px',
                     }}
                   >
-                    <DeleteIcon fontSize="small" />
+                    <span className="material-symbols-outlined">
+                  delete
+                  </span>
                   </button>
                 </Tooltip>
               </div>

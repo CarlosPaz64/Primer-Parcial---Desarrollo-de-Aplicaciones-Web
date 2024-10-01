@@ -66,7 +66,9 @@ const WarningModal: React.FC<WarningModalProps> = ({ isOpen, onClose, message })
       >
         <h2>Advertencia</h2>
         <p>{message}</p>
-        <button onClick={onClose}>OK</button>
+        <button onClick={onClose}><span className="material-symbols-outlined">
+check_circle
+</span></button>
       </ModalContent>
     </ModalOverlay>
   );

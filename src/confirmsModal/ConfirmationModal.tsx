@@ -66,9 +66,13 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, onClose, 
         <h2>Confirmar</h2>
         <p>{message}</p>
         <button onClick={onConfirm} style={{ marginRight: '10px' }}>
-          Confirmar
+        <span className="material-symbols-outlined">
+        check_circle
+        </span>
         </button>
-        <button onClick={onClose}>Cancelar</button>
+        <button onClick={onClose}><span className="material-symbols-outlined">
+        cancel
+        </span></button>
       </ModalContent>
     </ModalOverlay>
   );

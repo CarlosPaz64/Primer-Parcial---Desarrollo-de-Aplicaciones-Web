@@ -63,8 +63,12 @@ const DeleteColumnModal: React.FC<DeleteColumnModalProps> = ({ isOpen, onClose, 
       >
         <h2>Confirmar eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar esta columna?</p>
-        <button onClick={onConfirm}>Eliminar</button>
-        <button onClick={onClose}>Cancelar</button>
+        <button onClick={onConfirm}><span className="material-symbols-outlined">
+        check_circle
+        </span></button>
+        <button onClick={onClose}><span className="material-symbols-outlined">
+        cancel
+        </span></button>
       </ModalContent>
     </ModalOverlay>
   );

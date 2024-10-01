@@ -65,8 +65,12 @@ const DeleteNoteModal: React.FC<DeleteNoteModalProps> = ({ isOpen, onClose, onCo
       >
         <h2>Confirmar eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar esta nota?</p>
-        <button onClick={onConfirm}>Eliminar</button>
-        <button onClick={onClose}>Cancelar</button>
+        <button onClick={onConfirm}><span className="material-symbols-outlined">
+        check_circle
+        </span></button>
+        <button onClick={onClose}><span className="material-symbols-outlined">
+        cancel
+        </span></button>
       </ModalContent>
     </ModalOverlay>
   );

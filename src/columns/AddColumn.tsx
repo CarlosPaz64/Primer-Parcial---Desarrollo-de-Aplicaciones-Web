@@ -80,7 +80,7 @@ const AddColumn: React.FC = () => {
             cursor: 'pointer',
           }}
         >
-          Add new space
+          Agrega un nuevo espacio
         </button>
       </Tooltip>
 
