@@ -91,7 +91,6 @@ const initialState: KanbanState = {
 
 type Action =
   | { type: 'MOVE_NOTE'; sourceId: string; destId: string; sourceIndex: number; destIndex: number }
-  | { type: 'MOVE_COLUMN'; sourceIndex: number; destIndex: number }
   | { type: 'CHANGE_COLUMN_TITLE'; columnId: string; newTitle: string }
   | { type: 'ADD_NOTE'; columnId: string; note: Note }
   | { type: 'EDIT_NOTE'; columnId: string; noteId: string; updatedNote: Note }
@@ -213,14 +212,6 @@ const kanbanReducer = (state: KanbanState, action: Action): KanbanState => {
     }
 
     // Los demás casos siguen igual
-    case 'MOVE_COLUMN': {
-      const { sourceIndex, destIndex } = action;
-      const newColumns = Array.from(state.columns);
-      const [removed] = newColumns.splice(sourceIndex, 1);
-      newColumns.splice(destIndex, 0, removed);
-      return { ...state, columns: newColumns };
-    }
-
     case 'CHANGE_COLUMN_TITLE': {
       const { columnId, newTitle } = action;
       const updatedColumns = state.columns.map(col =>

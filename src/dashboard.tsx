@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { KanbanContext, Note } from './context-reducer/KanbanContext';
 import Column from './columns/Column';
 import EditableInput from './inputs/EditableInput';
@@ -11,8 +11,6 @@ import AppBar from './appBar/AppBar';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
-import DragPortal from './DragPortal'; 
-
 import DeleteColumnModal from './confirmsModal/DeleteColumnModal';
 import DeleteNoteModal from './confirmsModal/DeleteNoteModal';
 import ChangeTitleModal from './confirmsModal/ChangeTitleModal';
@@ -27,18 +25,16 @@ const Kanban: React.FC = () => {
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
   const [selectedNote, setSelectedNote] = useState<{ noteId: string; columnId: string } | null>(null);
-  
+
   // Estado de expansión de las columnas
   const [expandedColumns, setExpandedColumns] = useState<{ [key: string]: boolean }>({});
 
   const onDragEnd = (result: DropResult) => {
-    const { source, destination, type, draggableId } = result;
+    const { source, destination, draggableId } = result;
 
     if (!destination) return;
 
-    if (type === 'column') {
-      dispatch({ type: 'MOVE_COLUMN', sourceIndex: source.index, destIndex: destination.index });
-    } else if (draggableId.startsWith('collapsed-')) {
+    if (draggableId.startsWith('collapsed-')) {
       const sourceColumnId = source.droppableId;
       const destColumnId = destination.droppableId;
 
@@ -83,7 +79,6 @@ const Kanban: React.FC = () => {
   
     dispatch({ type: 'ADD_NOTE', columnId, note: newNote });
   };
-  
 
   const handleEditNote = (note: Note) => {
     setCurrentNote(note);
@@ -184,75 +179,55 @@ const Kanban: React.FC = () => {
             whiteSpace: 'nowrap',
           }}
         >
-          <Droppable droppableId="all-columns" direction="horizontal" type="column">
-            {(provided) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={{
-                  display: 'flex',
-                  position: 'relative',
-                  zIndex: '0',
-                }}
-              >
-                {state.columns.map((column, index) => (
-                  <Draggable key={column.id} draggableId={column.id} index={index}>
-                    {(provided, snapshot) => {
-                      const content = (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className="paper"
-                          style={{
-                            ...provided.draggableProps.style,
-                            zIndex: snapshot.isDragging ? 1000 : 'auto',
-                            whiteSpace: 'normal',
-                          }}
-                        >
-                          <EditableInput
-                            initialValue={column.title}
-                            onConfirm={() => openChangeTitleModal(column.id)}
-                          />
-                          <Column
-                            column={column}
-                            index={index}
-                            expanded={expandedColumns[column.id] || false} // Controla si la columna está expandida o colapsada
-                            onToggleExpand={() => toggleColumnExpansion(column.id)} // Controla el cambio de estado de expansión
-                            onDeleteNote={openDeleteNoteModal}
-                            onEditNote={handleEditNote}
-                          />
-                          <Tooltip title="Eliminar columna">
-                            <button
-                              onClick={() => openDeleteColumnModal(column.id)}
-                              style={{
-                                background: '#FF7878',
-                                color: '#fff',
-                                border: 'none',
-                                borderRadius: '50%',
-                                padding: '8px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginTop: '10px',
-                              }}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </button>
-                          </Tooltip>
-                        </div>
-                      );
-                      return snapshot.isDragging ? (
-                        <DragPortal isDragging={snapshot.isDragging}>
-                          {content}
-                        </DragPortal>
-                      ) : (
-                        content
-                      );
+          {/* Columnas sin arrastre */}
+          <div
+            style={{
+              display: 'flex',
+              position: 'relative',
+              zIndex: '0',
+            }}
+          >
+            {state.columns.map((column, index) => (
+              <div key={column.id} className="paper" style={{ margin: '0 10px' }}>
+                <EditableInput
+                  initialValue={column.title}
+                  onConfirm={() => openChangeTitleModal(column.id)}
+                />
+                <Column
+                  column={column}
+                  index={index}
+                  expanded={expandedColumns[column.id] || false} // Controla si la columna está expandida o colapsada
+                  onToggleExpand={() => toggleColumnExpansion(column.id)} // Controla el cambio de estado de expansión
+                  onDeleteNote={openDeleteNoteModal}
+                  onEditNote={handleEditNote}
+                />
+                <Tooltip title="Eliminar columna">
+                  <button
+                    onClick={() => openDeleteColumnModal(column.id)}
+                    style={{
+                      background: '#FF7878',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '50%',
+                      padding: '8px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: '10px',
                     }}
-                  </Draggable>
-                ))}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </button>
+                </Tooltip>
+              </div>
+            ))}
+          </div>
+
+          {/* Notas con drag and drop */}
+          <Droppable droppableId="notes" direction="vertical" type="note">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
                 {provided.placeholder}
               </div>
             )}

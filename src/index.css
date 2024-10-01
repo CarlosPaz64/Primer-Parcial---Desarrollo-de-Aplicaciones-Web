@@ -58,7 +58,7 @@ input, select {
   padding: 20px;
   background-color: #fff;
   width: 335px;
-  z-index: 0; /* Asegúrate de que el z-index no interfiera con las notas */
+  z-index: auto; /* Asegúrate de que el z-index no interfiera con las notas */
   overflow: visible; /* Evita que los elementos arrastrados se oculten al moverse */
 }
 .draggable {
