@@ -25,7 +25,7 @@ const CollapsedNotes: React.FC<CollapsedNotesProps> = ({
   return (
     <Draggable draggableId={`collapsed-${column.id}`} index={0}>
       {(provided, snapshot) => (
-        <Tooltip title="Notas amontonadas" placement="top">
+        <Tooltip title="Da click para liberar a las notas" placement="top">
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
