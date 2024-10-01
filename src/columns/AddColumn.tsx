@@ -53,13 +53,20 @@ const AddColumn: React.FC = () => {
         onChange={(e) => setNewColumnTitle(e.target.value)}
         placeholder="Añade el título de tu espacio"
         style={{
-          padding: '8px',
-          borderRadius: '4px',
-          border: '1px solid #ccc',
-          marginRight: '10px',
-          width: '200px',
+          padding: '10px 15px',
+          borderRadius: '8px',
+          border: '1px solid #E0E0E0', // Borde suave
+          backgroundColor: '#FAF3F3', // Fondo pastel
+          color: '#000', // Color del texto
+          fontSize: '16px', // Tamaño del texto
+          width: '250px', // Un poco más amplio
+          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)', // Sombra sutil
+          transition: 'all 0.3s ease', // Suaviza las transiciones
+          outline: 'none',
           boxSizing: 'border-box',
         }}
+        onFocus={(e) => (e.target.style.borderColor = '#A4C5C6')} // Cambia el color del borde en el enfoque
+        onBlur={(e) => (e.target.style.borderColor = '#E0E0E0')} // Restablece el borde cuando pierde el enfoque
       />
       <Tooltip title="Agregar un nuevo espacio">
         <button

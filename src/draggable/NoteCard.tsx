@@ -6,11 +6,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 
 const pastelColors = [
-  '#FFD1DC', '#D4F1F4', '#C3FDB8', '#FFFACD', '#FAD6A5',
-  '#F0A8D0', '#BB9AB1', '#E7F0DC', '#E8C5E5', '#DFD3C3',
-  '#EF9C66', '#D2E0FB', '#FCDC94', '#E3E1D9', '#D9ADAD',
-  '#EEBB4D', '#DBC6EB', '#AD6989', '#A4C5C6', '#E6E6FA',
-  '#FFF0F5', '#FFB6C1', '#F5DEB3', '#F0E68C', '#B0E0E6',
+  '#FFD1DC', '#D4F1F4', '#C3FDB8', '#FEF9D9', '#F3D0D7',
+  '#F1F1F1', '#FFC6C6', '#E7FBE6', '#E8C5E5', '#DFD3C3',
+  '#F1E5D1', '#D2E0FB', '#FCDC94', '#E3E1D9', '#D9ADAD',
+  '#F0EBE3', '#DBC6EB', '#F5EFFF', '#E7F0DC', '#E6E6FA',
+  '#FFF0F5', '#FFB6C1', '#F5DEB3', '#F0E68C', '#BBE9FF',
 ];
 
 let availableColors = [...pastelColors];
@@ -187,7 +187,8 @@ const NoteCard: React.FC<NoteCardProps> = ({
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
-          {...provided.draggableProps}
+          {...provided.draggableProps} // Asegura que el contenedor completo sea arrastrable
+          {...provided.dragHandleProps} // Permite arrastrar desde cualquier parte del contenedor
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           style={{
@@ -208,7 +209,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
             whiteSpace: 'nowrap',
           }}
         >
-          <div {...provided.dragHandleProps}>{NoteContent}</div>
+          {NoteContent}
 
           {/* Botones de editar y eliminar */}
           {isEditable && hovered && (
