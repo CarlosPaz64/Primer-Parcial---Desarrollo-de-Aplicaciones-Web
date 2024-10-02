@@ -160,7 +160,6 @@ const Kanban: React.FC = () => {
         position: 'relative',
         padding: '10px',
         backgroundColor: '#fff',
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
         overflowX: 'hidden',
         overflowY: 'auto',
       }}
