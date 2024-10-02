@@ -58,7 +58,7 @@ const Column: React.FC<ColumnProps> = ({
               <div
                 style={{
                   position: 'absolute',
-                  top: '10px',
+                  top: '-50px',
                   right: '10px',
                   zIndex: 10,
                 }}
