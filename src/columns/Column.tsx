@@ -59,7 +59,7 @@ const Column: React.FC<ColumnProps> = ({
                 style={{
                   position: 'absolute',
                   top: '-50px',
-                  right: '10px',
+                  right: '50px',
                   zIndex: 10,
                 }}
               >
