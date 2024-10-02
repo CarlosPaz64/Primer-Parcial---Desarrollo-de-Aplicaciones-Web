@@ -48,8 +48,8 @@ const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void 
       <button
         onClick={onConfirm}
         style={{
-          backgroundColor: '#F5B971',
-          color: 'white',
+          backgroundColor: '#ffeb3b',
+          color: '#000',
           padding: '10px',
           border: 'none',
           borderRadius: '5px',
@@ -64,8 +64,8 @@ const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void 
       <button
         onClick={onCancel}
         style={{
-          backgroundColor: '#C96868',
-          color: 'white',
+          backgroundColor: '#ffeb3b',
+          color: '#000',
           padding: '10px',
           border: 'none',
           borderRadius: '5px',
