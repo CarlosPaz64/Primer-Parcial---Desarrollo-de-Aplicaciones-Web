@@ -25,7 +25,6 @@ const Kanban: React.FC = () => {
   const [selectedNote, setSelectedNote] = useState<{ noteId: string; columnId: string } | null>(null);
   const [hoveredColumnId, setHoveredColumnId] = useState<string | null>(null);
 
-
   // Estado de expansión de las columnas
   const [expandedColumns, setExpandedColumns] = useState<{ [key: string]: boolean }>({});
 
@@ -239,28 +238,10 @@ const Kanban: React.FC = () => {
                   onToggleExpand={() => toggleColumnExpansion(column.id)} // Controla el cambio de estado de expansión
                   onDeleteNote={openDeleteNoteModal}
                   onEditNote={handleEditNote}
+                  hoveredColumnId={hoveredColumnId} // Añadimos el estado de hover
+                  setHoveredColumnId={setHoveredColumnId} // Pasamos la función para manejar el hover
+                  onDeleteColumn={openDeleteColumnModal} // Pasamos la función de eliminar columna
                 />
-                <Tooltip title="Eliminar espacio">
-                  <button
-                    onClick={() => openDeleteColumnModal(column.id)}
-                    style={{
-                      background: '#FF7878',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '50%',
-                      padding: '8px',
-                      cursor: 'pointer',
-                      display: hoveredColumnId === column.id ? 'flex' : 'none', // Mostrar solo cuando está en hover la columna actual
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginTop: '10px',
-                    }}
-                  >
-                    <span className="material-symbols-outlined">
-                  delete
-                  </span>
-                  </button>
-                </Tooltip>
               </div>
             ))}
           </div>
