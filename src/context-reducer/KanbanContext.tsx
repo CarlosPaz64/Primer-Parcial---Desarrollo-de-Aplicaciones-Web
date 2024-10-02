@@ -35,15 +35,15 @@ const initialState: KanbanState = {
           id: 'note1',
           author: 'Author 1',
           title: 'Note Title 1', // Ejemplo de título
-          category: 'General',
+          category: 'Work',
           content: 'This is a description of the note.', // Descripción del contenido
-          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+          tags: ['Lifestyle', 'tag2'], // Ejemplo de etiquetas
         },
         {
           id: 'note2',
           author: 'Author 1',
           title: 'Note Title 2', // Ejemplo de título
-          category: 'General',
+          category: 'Tasks',
           content: 'This is a description of the note.', // Descripción del contenido
           tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
         },
@@ -51,7 +51,7 @@ const initialState: KanbanState = {
           id: 'note3',
           author: 'Author 1',
           title: 'Note Title 3', // Ejemplo de título
-          category: 'General',
+          category: 'Personal',
           content: 'This is a description of the note.', // Descripción del contenido
           tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
         },
@@ -59,7 +59,7 @@ const initialState: KanbanState = {
           id: 'note4',
           author: 'Author 1',
           title: 'Note Title 4', // Ejemplo de título
-          category: 'General',
+          category: 'Work',
           content: 'This is a description of the note.', // Descripción del contenido
           tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
         },
@@ -67,7 +67,7 @@ const initialState: KanbanState = {
           id: 'note5',
           author: 'Author 1',
           title: 'Note Title 5', // Ejemplo de título
-          category: 'General',
+          category: 'Personal',
           content: 'This is a description of the note.', // Descripción del contenido
           tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
         },
@@ -75,7 +75,7 @@ const initialState: KanbanState = {
           id: 'note6',
           author: 'Author 1',
           title: 'Note Title 6', // Ejemplo de título
-          category: 'General',
+          category: 'Tasks',
           content: 'This is a description of the note.', // Descripción del contenido
           tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
         },
