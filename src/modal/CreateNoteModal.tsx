@@ -215,6 +215,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 </option>
               ))}
             </select>
+            <div style={{ display: 'flex', justifyContent: 'left', gap: '10px', marginBottom: '10px' }}>
             <button
               onClick={handleSave}
               style={{
@@ -223,14 +224,13 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 padding: '10px',
                 border: 'none',
                 borderRadius: '5px',
-                width: '100%',
-                marginBottom: '10px',
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
-              <span className="material-symbols-outlined">
-              save
-              </span>
+              <span className="material-symbols-outlined">save</span>
             </button>
             <button
               onClick={onClose}
@@ -240,14 +240,16 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
                 padding: '10px',
                 border: 'none',
                 borderRadius: '5px',
-                width: '100%',
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
-              <span className="material-symbols-outlined">
-                cancel
-                </span>
+              <span className="material-symbols-outlined">cancel</span>
             </button>
+          </div>
+
             {/* Modal de confirmación */}
             {isConfirmModalOpen && (
               <ConfirmationModal

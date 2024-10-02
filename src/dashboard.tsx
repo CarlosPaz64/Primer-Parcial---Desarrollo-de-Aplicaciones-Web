@@ -23,6 +23,8 @@ const Kanban: React.FC = () => {
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
   const [selectedNote, setSelectedNote] = useState<{ noteId: string; columnId: string } | null>(null);
+  const [hoveredColumnId, setHoveredColumnId] = useState<string | null>(null);
+
 
   // Estado de expansión de las columnas
   const [expandedColumns, setExpandedColumns] = useState<{ [key: string]: boolean }>({});
@@ -223,7 +225,9 @@ const Kanban: React.FC = () => {
             }}
           >
             {state.columns.map((column, index) => (
-              <div key={column.id} className="paper" style={{ margin: '0 10px' }}>
+              <div key={column.id} className="paper" style={{ margin: '0 10px' }}
+              onMouseEnter={() => setHoveredColumnId(column.id)} 
+              onMouseLeave={() => setHoveredColumnId(null)}>
                 <EditableInput
                   initialValue={column.title}
                   onConfirm={() => openChangeTitleModal(column.id)}
@@ -236,7 +240,7 @@ const Kanban: React.FC = () => {
                   onDeleteNote={openDeleteNoteModal}
                   onEditNote={handleEditNote}
                 />
-                <Tooltip title="Eliminar columna">
+                <Tooltip title="Eliminar espacio">
                   <button
                     onClick={() => openDeleteColumnModal(column.id)}
                     style={{
@@ -246,7 +250,7 @@ const Kanban: React.FC = () => {
                       borderRadius: '50%',
                       padding: '8px',
                       cursor: 'pointer',
-                      display: 'flex',
+                      display: hoveredColumnId === column.id ? 'flex' : 'none', // Mostrar solo cuando está en hover la columna actual
                       alignItems: 'center',
                       justifyContent: 'center',
                       marginTop: '10px',

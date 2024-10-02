@@ -33,6 +33,7 @@ const CollapsedNotes: React.FC<CollapsedNotesProps> = ({
             style={{
               ...provided.draggableProps.style, // Mantener el estilo proporcionado por react-beautiful-dnd
               zIndex: snapshot.isDragging ? 9999 : 'auto',
+              marginBottom: '90px',
             }}
             onClick={onExpand}
           >
