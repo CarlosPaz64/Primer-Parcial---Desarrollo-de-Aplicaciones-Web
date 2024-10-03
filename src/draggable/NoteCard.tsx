@@ -49,8 +49,18 @@ const NoteCard: React.FC<NoteCardProps> = ({
 
   const NoteContent = (
     <>
-      <h3 style={{ margin: '0 0 10px 0', fontWeight: '500', textAlign: 'center', color: '#000', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
-        {note.title}
+      <h3 
+      style={{ 
+        margin: '0 0 10px 0', 
+        fontWeight: '500', 
+        textAlign: 'center', 
+        color: '#000', 
+        overflow:'hidden', 
+        textOverflow:'ellipsis', 
+        whiteSpace:'nowrap' 
+        }}
+      >
+        {note.title ? note.title : 'La nota no tiene título'}
       </h3>
       <p
         style={{
