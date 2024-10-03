@@ -22,6 +22,9 @@ const tags = [
   { name: 'Travels', color: '#FF33A8' },
   { name: 'Animals', color: '#FFC107' },
   { name: 'Lifestyle', color: '#8E44AD' },
+  { name: 'Friends', color: '#295F98' },
+  { name: 'Family', color: '#705C53' },
+  { name: 'School', color: '#A6B37D' },
 ];
 
 const TagsModal: React.FC<TagsModalProps> = ({ selectedTags, setSelectedTags }) => {
