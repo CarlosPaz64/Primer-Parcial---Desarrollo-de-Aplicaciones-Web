@@ -62,7 +62,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
         whiteSpace:'nowrap' 
         }}
       >
-        {note.title ? note.title : 'La nota no tiene título'}
+        {note.title ? note.title : 'Sin título'}
       </h3>
       <p
         style={{

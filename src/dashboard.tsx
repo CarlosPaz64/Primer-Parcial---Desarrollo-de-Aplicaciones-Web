@@ -71,9 +71,9 @@ const Kanban: React.FC = () => {
       id: uuidv4(),
       author: 'Author',
       title: title || 'Título por defecto', // Título por defecto si no se proporciona
-      category: selectedCategories.length > 0 ? selectedCategories.join(', ') : 'Sin categoría', // Valor por defecto si no hay categorías
+      category: selectedCategories.length > 0 ? selectedCategories.join(', ') : 'General', // Valor por defecto si no hay categorías
       content: content || 'Contenido random', // Valor por defecto si no hay contenido
-      tags: selectedTags.length > 0 ? selectedTags : ['Sin etiquetas'], // Valor por defecto si no hay etiquetas
+      tags: selectedTags.length > 0 ? selectedTags : ['Lifestyle'], // Valor por defecto si no hay etiquetas
     };
   
     dispatch({ type: 'ADD_NOTE', columnId, note: newNote });
