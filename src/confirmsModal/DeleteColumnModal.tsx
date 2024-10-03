@@ -62,13 +62,51 @@ const DeleteColumnModal: React.FC<DeleteColumnModalProps> = ({ isOpen, onClose, 
         onClick={(e) => e.stopPropagation()}
       >
         <h2>Confirmar eliminación</h2>
-        <p>¿Estás seguro de que deseas eliminar esta columna?</p>
-        <button onClick={onConfirm}><span className="material-symbols-outlined">
-        check_circle
-        </span></button>
-        <button onClick={onClose}><span className="material-symbols-outlined">
-        cancel
-        </span></button>
+        <p>¿Estás seguro de que deseas eliminar este espacio?</p>
+        <div style={{ display: 'flex', justifyContent: 'left', gap: '10px', marginTop: '20px' }}>
+          <button
+            onClick={onConfirm}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#86AB89',
+              color: 'white',
+              padding: '10px',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              minWidth: '120px',  // Asegura que ambos botones tengan el mismo tamaño mínimo
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>
+              check_circle
+            </span>
+            Confirmar
+          </button>
+
+          <button
+            onClick={onClose}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#C96868',
+              color: 'white',
+              padding: '10px',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              minWidth: '120px',  // Asegura que ambos botones tengan el mismo tamaño mínimo
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>
+              cancel
+            </span>
+            Cancelar
+          </button>
+        </div>
+
       </ModalContent>
     </ModalOverlay>
   );

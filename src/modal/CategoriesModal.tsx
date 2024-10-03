@@ -22,6 +22,9 @@ const categories = [
   { name: 'Tasks', color: '#FF5733' },
   { name: 'Work', color: '#33C1FF' },
   { name: 'Personal', color: '#28A745' },
+  { name: 'General', color: '#B7B7B7' },
+  { name: 'Goal', color: '#C96868' },
+  { name: 'Note', color: '#A28B55' },
 ];
 
 const CategoriesModal: React.FC<CategoriesModalProps> = ({

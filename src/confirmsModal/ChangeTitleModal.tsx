@@ -45,37 +45,50 @@ const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void 
   <ModalOverlay initial="initial" animate="animate" exit="exit" variants={modalOverlayVariants}>
     <ModalContent initial="initial" animate="animate" exit="exit" variants={modalContentVariants}>
       <h4>¿Estás seguro de que quieres cambiar el nombre?</h4>
-      <button
-        onClick={onConfirm}
-        style={{
-          backgroundColor: '#ffeb3b',
-          color: '#000',
-          padding: '10px',
-          border: 'none',
-          borderRadius: '5px',
-          marginRight: '10px',
-          cursor: 'pointer',
-        }}
-      >
-        <span className="material-symbols-outlined">
-        check_circle
-        </span>
-      </button>
-      <button
-        onClick={onCancel}
-        style={{
-          backgroundColor: '#ffeb3b',
-          color: '#000',
-          padding: '10px',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
-      >
-        <span className="material-symbols-outlined">
-        cancel
-        </span>
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'left', gap: '10px', marginTop: '20px' }}>
+        <button
+          onClick={onConfirm}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#86AB89',
+            color: 'white',
+            padding: '10px',
+            border: 'none',
+            borderRadius: '5px',
+            marginRight: '10px',
+            cursor: 'pointer',
+            minWidth: '120px',  // Para que ambos botones mantengan un tamaño mínimo uniforme
+          }}
+        >
+          <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>
+            check_circle
+          </span>
+          Confirmar
+        </button>
+        
+        <button
+          onClick={onCancel}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#C96868',
+            color: 'white',
+            padding: '10px',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            minWidth: '120px',  // Para que ambos botones mantengan un tamaño mínimo uniforme
+          }}
+        >
+          <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>
+            cancel
+          </span>
+          Cancelar
+        </button>
+      </div>
     </ModalContent>
   </ModalOverlay>
 );
@@ -160,6 +173,7 @@ const ChangeTitleModal: React.FC<ChangeTitleModalProps> = ({ isOpen, onClose, on
                 borderRadius: '5px',
               }}
             />
+            <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
             <button
               onClick={handleConfirmChange}
               style={{
@@ -168,13 +182,19 @@ const ChangeTitleModal: React.FC<ChangeTitleModalProps> = ({ isOpen, onClose, on
                 padding: '10px',
                 border: 'none',
                 borderRadius: '5px',
-                width: '100%',
-                marginBottom: '10px',
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',  // Alinear icono verticalmente
+                flex: '1', // Distribuye espacio de forma uniforme
+                minWidth: '120px' // Establece un ancho mínimo común
               }}
             >
-              Cambiar Nombre
+              <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>
+                published_with_changes
+              </span>
+              Confirmar
             </button>
+            
             <button
               onClick={onClose}
               style={{
@@ -183,12 +203,20 @@ const ChangeTitleModal: React.FC<ChangeTitleModalProps> = ({ isOpen, onClose, on
                 padding: '10px',
                 border: 'none',
                 borderRadius: '5px',
-                width: '100%',
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',  // Alinear icono verticalmente
+                flex: '1', // Distribuye espacio de forma uniforme
+                minWidth: '120px' // Establece un ancho mínimo común
               }}
             >
+              <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>
+                cancel
+              </span>
               Cancelar
             </button>
+          </div>
+
 
             {/* Modal de confirmación */}
             {isConfirmModalOpen && (

@@ -65,14 +65,49 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, onClose, 
       >
         <h2>Confirmar</h2>
         <p>{message}</p>
-        <button onClick={onConfirm} style={{ marginRight: '10px' }}>
-        <span className="material-symbols-outlined">
-        check_circle
-        </span>
-        </button>
-        <button onClick={onClose}><span className="material-symbols-outlined">
-        cancel
-        </span></button>
+        <div style={{ display: 'flex', justifyContent: 'left', gap: '10px', marginTop: '20px' }}>
+          <button
+            onClick={onConfirm}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '10px',
+              backgroundColor: '#86AB89',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              minWidth: '120px'
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>
+              check_circle
+            </span>
+            Confirmar
+          </button>
+
+          <button
+            onClick={onClose}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '10px',
+              backgroundColor: '#C96868',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              minWidth: '120px'
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>
+              cancel
+            </span>
+            Cancelar
+          </button>
+        </div>
       </ModalContent>
     </ModalOverlay>
   );

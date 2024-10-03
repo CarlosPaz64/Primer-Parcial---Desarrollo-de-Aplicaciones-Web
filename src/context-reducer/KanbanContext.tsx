@@ -37,15 +37,15 @@ const initialState: KanbanState = {
           title: 'Note Title 1', // Ejemplo de título
           category: 'Work',
           content: 'This is a description of the note.', // Descripción del contenido
-          tags: ['Lifestyle', 'tag2'], // Ejemplo de etiquetas
+          tags: ['Lifestyle'], // Ejemplo de etiquetas
         },
         {
           id: 'note2',
           author: 'Author 1',
           title: 'Note Title 2', // Ejemplo de título
-          category: 'Tasks',
+          category: 'Personal',
           content: 'This is a description of the note.', // Descripción del contenido
-          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+          tags: ['Friends', 'Family'], // Ejemplo de etiquetas
         },
         {
           id: 'note3',
@@ -53,15 +53,15 @@ const initialState: KanbanState = {
           title: 'Note Title 3', // Ejemplo de título
           category: 'Personal',
           content: 'This is a description of the note.', // Descripción del contenido
-          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+          tags: ['Animals'], // Ejemplo de etiquetas
         },
         {
           id: 'note4',
           author: 'Author 1',
           title: 'Note Title 4', // Ejemplo de título
-          category: 'Work',
+          category: 'Goal',
           content: 'This is a description of the note.', // Descripción del contenido
-          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+          tags: ['School'], // Ejemplo de etiquetas
         },
         {
           id: 'note5',
@@ -69,7 +69,7 @@ const initialState: KanbanState = {
           title: 'Note Title 5', // Ejemplo de título
           category: 'Personal',
           content: 'This is a description of the note.', // Descripción del contenido
-          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+          tags: ['Friends'], // Ejemplo de etiquetas
         },
         {
           id: 'note6',
@@ -77,13 +77,13 @@ const initialState: KanbanState = {
           title: 'Note Title 6', // Ejemplo de título
           category: 'Tasks',
           content: 'This is a description of the note.', // Descripción del contenido
-          tags: ['tag1', 'tag2'], // Ejemplo de etiquetas
+          tags: ['Lifestyle'], // Ejemplo de etiquetas
         },
       ],
     },
-    { id: 'column2', title: 'Animals', notes: [] },
-    { id: 'column3', title: 'Product list', notes: [] },
-    { id: 'column4', title: 'Some stuff', notes: [] },
+    { id: 'column2', title: 'Tasks', notes: [] },
+    { id: 'column3', title: 'Products', notes: [] },
+    { id: 'column4', title: 'Homeworks', notes: [] },
   ],
   looseNotes: [], // Estado inicial vacío para notas no asignadas
 };

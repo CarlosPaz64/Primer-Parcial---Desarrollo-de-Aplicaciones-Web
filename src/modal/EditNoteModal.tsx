@@ -203,6 +203,7 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
               }}
             >
               <span className="material-symbols-outlined">save</span>
+              Guardar
             </button>
             <button
               onClick={onClose}
@@ -219,6 +220,7 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
               }}
             >
               <span className="material-symbols-outlined">cancel</span>
+              Cancelar
             </button>
           </div>
             {/* Modal de confirmación */}

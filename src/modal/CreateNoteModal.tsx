@@ -128,7 +128,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
   const handleSave = () => {
     if (!selectedColumn) {
       // Si no se ha seleccionado una columna, muestra el mensaje de advertencia
-      setWarningMessage('Por favor, selecciona una columna antes de agregar una nota.');
+      setWarningMessage('Por favor, selecciona un espacio antes de agregar una nota.');
       setIsWarningModalOpen(true);
       return;
     }
@@ -208,7 +208,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               onChange={(e) => setSelectedColumn(e.target.value)}
               style={{ marginBottom: '10px', width: '100%', padding: '8px', borderRadius: '5px' }}
             >
-              <option value="">Selecciona una columna</option>
+              <option value="">Selecciona un espacio</option>
               {columns.map((column) => (
                 <option key={column.id} value={column.id}>
                   {column.title}
@@ -231,6 +231,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               }}
             >
               <span className="material-symbols-outlined">save</span>
+              Guardar
             </button>
             <button
               onClick={onClose}
@@ -247,6 +248,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({
               }}
             >
               <span className="material-symbols-outlined">cancel</span>
+              Cancelar
             </button>
           </div>
 
