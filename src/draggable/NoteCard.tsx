@@ -128,6 +128,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
           zIndex: 1,
           position: 'relative',
           maxWidth: '150px',
+          minWidth: '150px', // Tamaño mínimo para la nota
           minHeight: '150px', // Tamaño mínimo para la nota
           overflow: 'hidden',
           textOverflow: 'ellipsis',
