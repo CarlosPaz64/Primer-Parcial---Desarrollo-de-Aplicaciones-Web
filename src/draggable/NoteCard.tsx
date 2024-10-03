@@ -218,6 +218,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
             zIndex: snapshot.isDragging ? 1000 : 1,
             position: snapshot.isDragging ? 'fixed' : 'relative',
             maxWidth: '150px',
+            minWidth: '150px', // Tamaño mínimo para la nota
             minHeight: '150px', // Tamaño mínimo para la nota
             overflow: 'hidden',
             textOverflow: 'ellipsis',
