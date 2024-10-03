@@ -199,8 +199,8 @@ const NoteCard: React.FC<NoteCardProps> = ({
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
-          {...provided.draggableProps} // Asegura que el contenedor completo sea arrastrable
-          {...provided.dragHandleProps} // Permite arrastrar desde cualquier parte del contenedor
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           style={{
@@ -222,9 +222,9 @@ const NoteCard: React.FC<NoteCardProps> = ({
           }}
         >
           {NoteContent}
-
-          {/* Botones de editar y eliminar */}
-          {isEditable && hovered && (
+  
+          {/* Botones de editar y eliminar con animación */}
+          {isEditable && (
             <div
               style={{
                 display: 'flex',
@@ -233,7 +233,10 @@ const NoteCard: React.FC<NoteCardProps> = ({
                 position: 'absolute',
                 top: '5px',
                 right: '5px',
-                zIndex: 10, // Asegura que los botones queden sobre el contenido
+                zIndex: 10,
+                opacity: hovered ? 1 : 0,
+                transform: hovered ? 'translateY(0)' : 'translateY(-10px)',
+                transition: 'opacity 0.3s ease, transform 0.3s ease', // Animación suave
               }}
             >
               <Tooltip title="Editar">
@@ -251,9 +254,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
                     justifyContent: 'center',
                   }}
                 >
-                  <span className="material-symbols-outlined">
-                  edit_note
-                  </span>
+                  <span className="material-symbols-outlined">edit_note</span>
                 </button>
               </Tooltip>
               <Tooltip title="Eliminar">
@@ -271,9 +272,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
                     justifyContent: 'center',
                   }}
                 >
-                  <span className="material-symbols-outlined">
-                  delete
-                  </span>
+                  <span className="material-symbols-outlined">delete</span>
                 </button>
               </Tooltip>
             </div>
@@ -281,7 +280,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
         </div>
       )}
     </Draggable>
-  );
+  );  
 };
 
 export default NoteCard;

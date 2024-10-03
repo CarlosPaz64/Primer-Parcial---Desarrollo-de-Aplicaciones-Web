@@ -54,35 +54,36 @@ const Column: React.FC<ColumnProps> = ({
             }}
           >
             {/* Mostrar el botón de eliminar solo si esta columna está en hover */}
-            {hoveredColumnId === column.id && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '-50px',
-                  right: '50px',
-                  zIndex: 10,
-                }}
-              >
-                <Tooltip title="Eliminar espacio">
-                  <button
-                    onClick={() => onDeleteColumn(column.id)}
-                    style={{
-                      background: '#FF7878',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '50%',
-                      padding: '8px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <span className="material-symbols-outlined">delete</span>
-                  </button>
-                </Tooltip>
-              </div>
-            )}
+            <div
+              style={{
+                position: 'absolute',
+                top: '-50px',
+                right: '50px',
+                zIndex: 10,
+                opacity: hoveredColumnId === column.id ? 1 : 0,
+                transform: hoveredColumnId === column.id ? 'translateY(0)' : 'translateY(-10px)',
+                transition: 'opacity 0.3s ease, transform 0.3s ease', // Animación suave
+              }}
+            >
+              <Tooltip title="Eliminar espacio">
+                <button
+                  onClick={() => onDeleteColumn(column.id)}
+                  style={{
+                    background: '#FF7878',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '50%',
+                    padding: '8px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <span className="material-symbols-outlined">delete</span>
+                </button>
+              </Tooltip>
+            </div>
 
             {/* Contenido de las notas */}
             {!expanded ? (
