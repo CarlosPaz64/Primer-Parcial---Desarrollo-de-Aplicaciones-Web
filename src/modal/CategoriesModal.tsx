@@ -1,4 +1,3 @@
-// CategoriesModal.tsx
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
@@ -37,7 +36,13 @@ const CategoriesModal: React.FC<CategoriesModalProps> = ({
         <CategoryBadge
           key={category.name}
           color={category.color}
-          onClick={() => setSelectedCategories([category.name])} // Selecciona solo una categoría
+          onClick={() =>
+            setSelectedCategories(
+              selectedCategories.includes(category.name)
+                ? selectedCategories.filter((c) => c !== category.name) // Si está seleccionada, la quita
+                : [...selectedCategories, category.name] // Si no está seleccionada, la añade
+            )
+          }
         >
           {category.name}
         </CategoryBadge>
