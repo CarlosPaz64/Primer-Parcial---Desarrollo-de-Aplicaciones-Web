@@ -121,7 +121,7 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({
         ...note,
         title,
         content,
-        category: selectedCategories[0] || '',
+        category: selectedCategories.join(', '), // Guarda todas las categorías seleccionadas
         tags: selectedTags,
       };
       onSaveNote(updatedNote);

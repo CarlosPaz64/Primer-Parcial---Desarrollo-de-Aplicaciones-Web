@@ -37,13 +37,7 @@ const CategoriesModal: React.FC<CategoriesModalProps> = ({
         <CategoryBadge
           key={category.name}
           color={category.color}
-          onClick={() =>
-            setSelectedCategories(
-              selectedCategories.includes(category.name)
-                ? selectedCategories.filter((c) => c !== category.name)
-                : [...selectedCategories, category.name]
-            )
-          }
+          onClick={() => setSelectedCategories([category.name])} // Selecciona solo una categoría
         >
           {category.name}
         </CategoryBadge>
