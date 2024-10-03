@@ -9,6 +9,8 @@ const pastelColors = [
   '#F1E5D1', '#D2E0FB', '#FCDC94', '#E3E1D9', '#D9ADAD',
   '#F0EBE3', '#DBC6EB', '#F5EFFF', '#E7F0DC', '#E6E6FA',
   '#FFF0F5', '#FFB6C1', '#F5DEB3', '#F0E68C', '#BBE9FF',
+  '#91DDCF', '#C8CFA0', '#F1F8E8', '#B5C18E', '#E1ACAC',
+  '#BFF6C3', '#FCFFE0', '#E8EFCF', '#AD88C6', '#FDFFAB',
 ];
 
 let availableColors = [...pastelColors];
