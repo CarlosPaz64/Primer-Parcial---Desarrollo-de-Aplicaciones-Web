@@ -23,3 +23,5 @@ Esto por si al correr npm install las devDependencies no se instalan correctamen
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
   }
+
+  Link del Github: https://github.com/CarlosPaz64/Primer-Parcial---Desarrollo-de-aplicaciones-web.git
