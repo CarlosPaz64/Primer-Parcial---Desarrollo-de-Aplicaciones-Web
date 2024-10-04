@@ -60,6 +60,8 @@ input, select {
   width: 335px;
   z-index: auto; /* Asegúrate de que el z-index no interfiera con las notas */
   overflow: visible; /* Evita que los elementos arrastrados se oculten al moverse */
+  border-radius: 10px; /* Ajusta este valor para redondear las esquinas */
+  border: 2px solid #000; /* Define el tamaño, estilo y color del borde */
 }
 .draggable {
   top: auto !important;
@@ -73,12 +75,12 @@ div::-webkit-scrollbar {
 }
 
 div::-webkit-scrollbar-thumb {
-  background-color: #fff; /* Color del "pulgar" de la barra */
+  background-color: #000; /* Color del "pulgar" de la barra */
   border-radius: 10px; /* Bordes redondeados para el "pulgar" */
 }
 
 div::-webkit-scrollbar-thumb:hover {
-  background-color: #fff; /* Color del "pulgar" cuando está en hover */
+  background-color: #ebdede; /* Color del "pulgar" cuando está en hover */
 }
 
 div::-webkit-scrollbar-track {
