@@ -13,7 +13,7 @@ const AppBar: React.FC = () => {
       }}
     >
       <h1 style={{ fontWeight: 'bold', margin: 0 }}>Aplicación de notas</h1>
-      <h2 style={{ fontWeight: 400, margin: 0 }}>Bienvenido</h2>
+      <h2 style={{ fontWeight: 400, margin: 0 }}>Bienvenido. Esta es una aplicación de notas horizontal. Al crear un espacio, lo podrás encontrar moviendo el conjunto de notas o tus notas horizontalmente.</h2>
     </header>
   );
 };
