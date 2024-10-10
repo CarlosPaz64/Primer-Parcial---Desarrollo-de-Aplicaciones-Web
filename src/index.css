@@ -1,6 +1,7 @@
 /* styles.css */
 *{
   font-family: 'Noto Sans', sans-serif;
+  cursor: url('./assets/angelito.png'), auto !important;
 }
 
 /* Estilo general del cuerpo y de los encabezados */
